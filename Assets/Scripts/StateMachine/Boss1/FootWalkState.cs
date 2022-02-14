@@ -28,7 +28,7 @@ public class FootWalkState : FootState
         footTargetPosition.y = 0;
 
         time = 0;
-        footStartPosition = footStates.foot.position;
+        footStartPosition = footStates.footKinematic.CurrentPosition;
         float totalDistance = Vector2.Distance(footStartPosition, footTargetPosition);
         timeToComplete = totalDistance / speed;
     }
@@ -38,13 +38,13 @@ public class FootWalkState : FootState
         time += Time.deltaTime;
         float t = Mathf.Clamp01(time / timeToComplete);
 
-        var dist = Vector3.Distance(footStates.foot.position, footTargetPosition);
+        var dist = Vector3.Distance(footStates.footKinematic.CurrentPosition, footTargetPosition);
         Debug.Log(dist);
         if (dist > 0.001f)
         {
             var p = Vector2.Lerp(footStartPosition, footTargetPosition, t);
             p.y += Mathf.Sin(t * Mathf.PI) * 5;
-            footStates.foot.position = p;
+            footStates.footKinematic.MovementUpdate(p);
             //footStates.foot.position = Vector3.MoveTowards(footStates.foot.position, footTargetPos, Time.deltaTime * speed);
             stateMachine.torso.position = Vector2.MoveTowards(stateMachine.torso.position, stateMachine.GetTorsoTargetPositionMoving(), Time.deltaTime * speed);
         }
@@ -56,6 +56,7 @@ public class FootWalkState : FootState
 
     public override void ExitState(Boss1 stateMachine)
     {
+        footStates.footKinematic.MovementUpdate(footStates.footKinematic.CurrentPosition);
         Debug.Log(footStates.foot.name + " walk end");
     }
 }

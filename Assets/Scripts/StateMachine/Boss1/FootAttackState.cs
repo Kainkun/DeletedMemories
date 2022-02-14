@@ -22,10 +22,10 @@ public class FootAttackState : FootState
     {
         time += Time.deltaTime;
 
-        var dist = Vector3.Distance(footStates.foot.position, footStartPosition);
+        var dist = Vector3.Distance(footStates.footKinematic.CurrentPosition, footStartPosition);
         if (dist > 0.001f)
         {
-            footStates.foot.position = Vector3.MoveTowards(footStates.foot.position, footStartPosition, Time.deltaTime * speed);
+            footStates.footKinematic.MovementUpdate(Vector3.MoveTowards(footStates.footKinematic.CurrentPosition, footStartPosition, Time.deltaTime * speed));
             stateMachine.torso.position = Vector2.MoveTowards(stateMachine.torso.position, stateMachine.GetTorsoTargetPositionMoving(), Time.deltaTime * speed);
         }
         else
@@ -36,6 +36,7 @@ public class FootAttackState : FootState
 
     public override void ExitState(Boss1 stateMachine)
     {
+        footStates.footKinematic.MovementUpdate(footStates.footKinematic.CurrentPosition);
         Debug.Log(footStates.foot.name + " attack end");
     }
 }

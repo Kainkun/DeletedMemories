@@ -23,12 +23,15 @@ public class Boss1 : StateMachine<Boss1>
         public void CreateStates(int footDirection)
         {
             this.footDirection = footDirection;
+            this.footKinematic = foot.GetComponent<MovingKinematic>();
             this.plant = new FootPlantState(this);
             this.walk = new FootWalkState(this);
             this.attack = new FootAttackState(this);
         }
 
         public int footDirection;
+        [HideInInspector]
+        public MovingKinematic footKinematic;
         public FootPlantState plant;
         public FootWalkState walk;
         public FootAttackState attack;

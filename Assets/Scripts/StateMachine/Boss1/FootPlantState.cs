@@ -15,7 +15,7 @@ public class FootPlantState : FootState
     {
         Debug.Log(footStates.foot.name + " plant start");
         currentTime = 0;
-        torsoTargetPosition = (Vector2.up * stateMachine.torsoHeightOffset) + (Vector2)footStates.foot.position;
+        torsoTargetPosition = (Vector2.up * stateMachine.torsoHeightOffset) + (Vector2)footStates.footKinematic.CurrentPosition;
     }
 
     public override void UpdateState(Boss1 stateMachine)
