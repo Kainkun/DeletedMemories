@@ -17,7 +17,7 @@ public class FootWalkState : FootState
 
     public override void EnterState(Boss1 stateMachine)
     {
-        Debug.Log(footStates.foot.name + " walk start");
+        //Debug.Log(footStates.foot.name + " walk start");
 
         var localFootTargetPos = stateMachine.torso.transform.InverseTransformPoint(stateMachine.attackTarget.transform.position);
         if (footStates.footDirection == 1)
@@ -35,18 +35,18 @@ public class FootWalkState : FootState
 
     public override void UpdateState(Boss1 stateMachine)
     {
-        time += Time.deltaTime;
+        time += Time.fixedDeltaTime;
         float t = Mathf.Clamp01(time / timeToComplete);
 
         var dist = Vector3.Distance(footStates.footKinematic.CurrentPosition, footTargetPosition);
-        Debug.Log(dist);
+        //Debug.Log(dist);
         if (dist > 0.001f)
         {
             var p = Vector2.Lerp(footStartPosition, footTargetPosition, t);
             p.y += Mathf.Sin(t * Mathf.PI) * 5;
             footStates.footKinematic.MovementUpdate(p);
-            //footStates.foot.position = Vector3.MoveTowards(footStates.foot.position, footTargetPos, Time.deltaTime * speed);
-            stateMachine.torso.position = Vector2.MoveTowards(stateMachine.torso.position, stateMachine.GetTorsoTargetPositionMoving(), Time.deltaTime * speed);
+            //footStates.foot.position = Vector3.MoveTowards(footStates.foot.position, footTargetPos, Time.fixedDeltaTime * speed);
+            stateMachine.torso.position = Vector2.MoveTowards(stateMachine.torso.position, stateMachine.GetTorsoTargetPositionMoving(), Time.fixedDeltaTime * speed);
         }
         else
         {
@@ -57,6 +57,6 @@ public class FootWalkState : FootState
     public override void ExitState(Boss1 stateMachine)
     {
         footStates.footKinematic.MovementUpdate(footStates.footKinematic.CurrentPosition);
-        Debug.Log(footStates.foot.name + " walk end");
+        //Debug.Log(footStates.foot.name + " walk end");
     }
 }

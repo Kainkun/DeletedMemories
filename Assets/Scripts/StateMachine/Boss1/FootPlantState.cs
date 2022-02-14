@@ -13,30 +13,30 @@ public class FootPlantState : FootState
 
     public override void EnterState(Boss1 stateMachine)
     {
-        Debug.Log(footStates.foot.name + " plant start");
+        //Debug.Log(footStates.foot.name + " plant start");
         currentTime = 0;
         torsoTargetPosition = (Vector2.up * stateMachine.torsoHeightOffset) + (Vector2)footStates.footKinematic.CurrentPosition;
     }
 
     public override void UpdateState(Boss1 stateMachine)
     {
-        currentTime += Time.deltaTime;
+        currentTime += Time.fixedDeltaTime;
 
         // if (Vector2.Distance(stateMachine.torso.position, torsoTargetPosition) > 0.001f)
         // {
-        //     stateMachine.torso.position = Vector2.MoveTowards(stateMachine.torso.position, torsoTargetPosition, Time.deltaTime * speed);
+        //     stateMachine.torso.position = Vector2.MoveTowards(stateMachine.torso.position, torsoTargetPosition, Time.fixedDeltaTime * speed);
         // }
         if (currentTime < plantTime)
         {
-            currentTime += Time.deltaTime;
+            currentTime += Time.fixedDeltaTime;
         }
         else
         {
             var oppositeFootStates = stateMachine.GetOppositeFootStates(footStates);
-            var shoulderPosition = oppositeFootStates.shoulder.position;
+            var shoulderPosition = oppositeFootStates.hip.position;
             var targetPos = stateMachine.attackTarget.transform.position;
             var dist = Vector3.Distance(shoulderPosition, targetPos);
-            Debug.Log(dist);
+            //Debug.Log(dist);
             if (dist > 6 && dist < 11)
                 stateMachine.SetState(oppositeFootStates.attack);
             else
@@ -46,6 +46,6 @@ public class FootPlantState : FootState
 
     public override void ExitState(Boss1 stateMachine)
     {
-        Debug.Log(footStates.foot.name + " plant end");
+        //Debug.Log(footStates.foot.name + " plant end");
     }
 }

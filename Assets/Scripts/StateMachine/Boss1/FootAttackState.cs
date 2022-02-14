@@ -20,13 +20,13 @@ public class FootAttackState : FootState
 
     public override void UpdateState(Boss1 stateMachine)
     {
-        time += Time.deltaTime;
+        time += Time.fixedDeltaTime;
 
         var dist = Vector3.Distance(footStates.footKinematic.CurrentPosition, footStartPosition);
         if (dist > 0.001f)
         {
-            footStates.footKinematic.MovementUpdate(Vector3.MoveTowards(footStates.footKinematic.CurrentPosition, footStartPosition, Time.deltaTime * speed));
-            stateMachine.torso.position = Vector2.MoveTowards(stateMachine.torso.position, stateMachine.GetTorsoTargetPositionMoving(), Time.deltaTime * speed);
+            footStates.footKinematic.MovementUpdate(Vector3.MoveTowards(footStates.footKinematic.CurrentPosition, footStartPosition, Time.fixedDeltaTime * speed));
+            stateMachine.torso.position = Vector2.MoveTowards(stateMachine.torso.position, stateMachine.GetTorsoTargetPositionMoving(), Time.fixedDeltaTime * speed);
         }
         else
         {

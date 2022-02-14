@@ -18,7 +18,7 @@ public class Boss1 : StateMachine<Boss1>
     public class FootStates
     {
         public Transform foot;
-        public Transform shoulder;
+        public Transform hip;
 
         public void CreateStates(int footDirection)
         {
