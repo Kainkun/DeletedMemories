@@ -1,0 +1,27 @@
+tree("Root")
+    fallback
+        tree("CheckDead")
+        tree("BeAlive")
+
+tree("CheckDead")
+    sequence
+        not IsAlive
+        Die
+
+tree("BeAlive")
+    fallback
+        tree("StepOnTarget")
+        tree("StepTowardsTarget")
+        
+tree("StepOnTarget")
+    sequence
+        TargetInStepRange
+        SetFootDestinationTowardsTarget
+        MoveFootToDestination
+        SwapCurrentFoot
+
+tree("StepTowardsTarget")
+    sequence
+        SetFootDestinationTowardsTarget
+        MoveFootToDestination
+        SwapCurrentFoot
