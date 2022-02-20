@@ -17,15 +17,14 @@ tree("TargetVisible")
     sequence
         IsTargetSeen
         fallback
-            //tree("StepOnTarget")
+            tree("StepOnTarget")
             tree("StepTowardsTarget")
         
 tree("StepOnTarget")
     sequence
         TargetInStepRange
-        SetFootDestinationTowardsTarget
+        SetFootDestinationOnTarget
         MoveFootToDestination
-        MoveFootToGround
         SwapCurrentFoot
         Wait(0.2)
 
@@ -33,7 +32,6 @@ tree("StepTowardsTarget")
     sequence
         SetFootDestinationTowardsTarget
         MoveFootToDestination
-        //MoveFootToGround
         SwapCurrentFoot
 
 tree("Roam")

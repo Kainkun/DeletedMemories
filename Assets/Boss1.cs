@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using Panda;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.U2D.IK;
 
@@ -14,6 +15,7 @@ public class Boss1 : MonoBehaviour
     public float torsoHeightOffset = 5;
     public float stepRange = 12;
     public float stepHeight = 5;
+    public float stepDistance = 5;
     public float feetSpeed = 10;
     public LimbSolver2D rightFootSolver;
     public LimbSolver2D leftFootSolver;
@@ -21,7 +23,6 @@ public class Boss1 : MonoBehaviour
     private MovingKinematic _leftFootTarget;
     private Transform _rightFootTransform;
     private Transform _leftFootTransform;
-    public float footHitboxThickness = 0.2f;
 
     private MovingKinematic currentFootTarget;
     private Transform currentFootTransform;
@@ -90,9 +91,25 @@ public class Boss1 : MonoBehaviour
     }
 
     [Task]
+    void SetFootDestinationOnTarget()
+    {
+        var targetGroundHit = Physics2D.Raycast(target.position, Vector2.down, Mathf.Infinity, GameData.defaultGroundMask);
+        var localFootTargetPos = body.transform.InverseTransformPoint(targetGroundHit.point);
+        if (currentFootTarget == _rightFootTarget)
+            localFootTargetPos.x = Mathf.Clamp(localFootTargetPos.x, 0, stepRange);
+        else //currentFoot == leftFoot
+            localFootTargetPos.x = Mathf.Clamp(localFootTargetPos.x, -stepRange, 0);
+        footDestiniation = body.transform.TransformPoint(localFootTargetPos);
+
+        ThisTask.Succeed();
+    }
+    
+    [Task]
     void SetFootDestinationTowardsTarget()
     {
-        var targetGroundHit = Physics2D.Raycast(target.position, Vector2.down, 10, GameData.defaultGroundMask);
+        var targetDir = Mathf.Sign(target.position.x - currentFootTarget.NextPosition.x);
+        var pos = currentFootTarget.NextPosition + new Vector2(targetDir * stepDistance, stepHeight);
+        var targetGroundHit = Physics2D.Raycast(pos, Vector2.down, Mathf.Infinity, GameData.defaultGroundMask);
         var localFootTargetPos = body.transform.InverseTransformPoint(targetGroundHit.point);
         if (currentFootTarget == _rightFootTarget)
             localFootTargetPos.x = Mathf.Clamp(localFootTargetPos.x, 0, stepRange);
@@ -204,7 +221,6 @@ public class Boss1 : MonoBehaviour
             {
                 Vector2 newDelta = delta;
                 newDelta.x = 0;
-                newDelta.y = Mathf.Sign(delta.y) * delta.magnitude;
 
                 if (delta.y < 0)
                 {
@@ -270,9 +286,9 @@ public class Boss1 : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        // Gizmos.color = Color.magenta;
-        // if(footDestiniation != Vector2.zero)
-        //     Gizmos.DrawSphere(footDestiniation, 1);
+        Gizmos.color = Color.magenta;
+        if(footDestiniation != Vector2.zero)
+            Gizmos.DrawSphere(footDestiniation, 1);
 
         // Vector2 l = leftFoot.transform.position;
         // l.y += (footHitboxThickness/2);
