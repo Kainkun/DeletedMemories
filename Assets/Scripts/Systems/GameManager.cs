@@ -19,9 +19,8 @@ public class GameManager : SystemSingleton<GameManager>
     
     private static readonly GameData GameData = new GameData();
 
-    protected override void Awake()
+    private void Start()
     {
-        base.Awake();
         DontDestroyOnLoad(transform.gameObject);
         
         Application.quitting += () => applicationIsQuitting = true;
