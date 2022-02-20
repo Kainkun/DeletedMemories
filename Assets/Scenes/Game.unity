@@ -3338,7 +3338,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 889879087}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 21.6, y: 11.6, z: 0}
+  m_LocalPosition: {x: 21.6, y: 4.7, z: 0}
   m_LocalScale: {x: 5.4375, y: 11.68506, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -3720,7 +3720,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 984680027}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 30.83, y: 4.57, z: 0}
+  m_LocalPosition: {x: 30.83, y: 1.7, z: 0}
   m_LocalScale: {x: 5.4375, y: 11.68506, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -6457,12 +6457,11 @@ MonoBehaviour:
   body: {fileID: 1074941799}
   sightDistance: 50
   torsoHeightOffset: 5
-  stepRange: 14
-  stepHeight: 4
+  stepHeight: 7
+  stepDistance: 12
   feetSpeed: 10
   rightFootSolver: {fileID: 2114755164}
   leftFootSolver: {fileID: 481970057}
-  footHitboxThickness: 0.1
 --- !u!114 &1927888066
 MonoBehaviour:
   m_ObjectHideFlags: 0

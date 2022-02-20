@@ -13,9 +13,8 @@ public class Boss1 : MonoBehaviour
     public MovingKinematic body;
     public float sightDistance = 20;
     public float torsoHeightOffset = 5;
-    public float stepRange = 12;
     public float stepHeight = 5;
-    public float stepDistance = 5;
+    public float stepDistance = 12;
     public float feetSpeed = 10;
     public LimbSolver2D rightFootSolver;
     public LimbSolver2D leftFootSolver;
@@ -87,7 +86,7 @@ public class Boss1 : MonoBehaviour
     [Task]
     bool TargetInStepRange()
     {
-        return Vector2.Distance(body.transform.position, target.position) <= stepRange;
+        return Vector2.Distance(body.transform.position, target.position) <= stepDistance;
     }
 
     [Task]
@@ -96,9 +95,9 @@ public class Boss1 : MonoBehaviour
         var targetGroundHit = Physics2D.Raycast(target.position, Vector2.down, Mathf.Infinity, GameData.defaultGroundMask);
         var localFootTargetPos = body.transform.InverseTransformPoint(targetGroundHit.point);
         if (currentFootTarget == _rightFootTarget)
-            localFootTargetPos.x = Mathf.Clamp(localFootTargetPos.x, 0, stepRange);
+            localFootTargetPos.x = Mathf.Clamp(localFootTargetPos.x, 0, stepDistance);
         else //currentFoot == leftFoot
-            localFootTargetPos.x = Mathf.Clamp(localFootTargetPos.x, -stepRange, 0);
+            localFootTargetPos.x = Mathf.Clamp(localFootTargetPos.x, -stepDistance, 0);
         footDestiniation = body.transform.TransformPoint(localFootTargetPos);
 
         ThisTask.Succeed();
@@ -112,9 +111,9 @@ public class Boss1 : MonoBehaviour
         var targetGroundHit = Physics2D.Raycast(pos, Vector2.down, Mathf.Infinity, GameData.defaultGroundMask);
         var localFootTargetPos = body.transform.InverseTransformPoint(targetGroundHit.point);
         if (currentFootTarget == _rightFootTarget)
-            localFootTargetPos.x = Mathf.Clamp(localFootTargetPos.x, 0, stepRange);
+            localFootTargetPos.x = Mathf.Clamp(localFootTargetPos.x, 0, stepDistance);
         else //currentFoot == leftFoot
-            localFootTargetPos.x = Mathf.Clamp(localFootTargetPos.x, -stepRange, 0);
+            localFootTargetPos.x = Mathf.Clamp(localFootTargetPos.x, -stepDistance, 0);
         footDestiniation = body.transform.TransformPoint(localFootTargetPos);
 
         ThisTask.Succeed();
@@ -240,6 +239,19 @@ public class Boss1 : MonoBehaviour
 
                 delta = newDelta;
             }
+            
+            // if (Physics2D.OverlapBox(currentFootTarget.NextPosition + delta, footSize, 0, GameData.defaultGroundMask))
+            // {
+            //     if (Physics2D.OverlapBox(currentFootTarget.NextPosition + new Vector2(delta.x, 0), footSize, 0, GameData.defaultGroundMask))
+            //     {
+            //         delta.x = 0;
+            //     }
+            //
+            //     if (Physics2D.OverlapBox(currentFootTarget.NextPosition + new Vector2(0, delta.y), footSize, 0, GameData.defaultGroundMask))
+            //     {
+            //         delta.y = 0;
+            //     }
+            // }
             
             Vector2 leftFootDisconnect = _leftFootTransform.position - _leftFootTarget.transform.position;
             Vector2 rightFootDisconnect = _rightFootTransform.position - _rightFootTarget.transform.position;
