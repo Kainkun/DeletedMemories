@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,7 +15,7 @@ public class MovingKinematic : MonoBehaviour
     private Vector2 _delta;
 
     public Vector2 StartPosition => _startPosition;
-    public Vector2 CurrentPosition => _nextFramePosition;
+    public Vector2 NextPosition => _nextFramePosition;
     public Vector2 Velocity => _velocity;
     public Vector2 Delta => _delta;
 
@@ -35,5 +36,22 @@ public class MovingKinematic : MonoBehaviour
         
         _delta = _nextFramePosition - _currentPosition;
         _velocity = _delta / Time.fixedDeltaTime;
+    }
+    
+    public void MovementUpdate()
+    {
+        rb.MovePosition(_nextFramePosition);
+        _currentPosition = _nextFramePosition;
+
+        _delta = _nextFramePosition - _currentPosition;
+        _velocity = _delta / Time.fixedDeltaTime;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawSphere(_currentPosition, 0.2f);
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(_nextFramePosition, 0.2f);
     }
 }

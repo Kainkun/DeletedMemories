@@ -1,0 +1,38 @@
+tree("Root")
+    fallback
+        tree("CheckDead")
+        tree("BeAlive")
+
+tree("CheckDead")
+    sequence
+        not IsAlive
+        Die
+
+tree("BeAlive")
+    fallback
+        tree("TargetVisible")
+        tree("Roam")
+        
+tree("TargetVisible")
+    sequence
+        IsTargetSeen
+        fallback
+            tree("StepOnTarget")
+            tree("StepTowardsTarget")
+        
+tree("StepOnTarget")
+    sequence
+        TargetInStepRange
+        SetFootDestinationOnTarget
+        MoveFootToDestination
+        SwapCurrentFoot
+        Wait(0.2)
+
+tree("StepTowardsTarget")
+    sequence
+        SetFootDestinationTowardsTarget
+        MoveFootToDestination
+        SwapCurrentFoot
+
+tree("Roam")
+    Succeed()

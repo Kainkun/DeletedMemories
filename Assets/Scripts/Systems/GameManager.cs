@@ -17,11 +17,16 @@ public class GameManager : SystemSingleton<GameManager>
     
     public static bool applicationIsQuitting = false;
 
-    private void Start()
+    private static readonly GameData GameData = new GameData();
+
+    protected override void Awake()
     {
+        base.Awake();
         DontDestroyOnLoad(transform.gameObject);
         
         Application.quitting += () => applicationIsQuitting = true;
+
+        GameData.SetData();
 
         overlayCredits = Instantiate(Resources.Load<GameObject>("Overlay Credits"));
         overlayPause = Instantiate(Resources.Load<GameObject>("Overlay Pause"));
