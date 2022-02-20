@@ -7,13 +7,12 @@ using UnityEngine.SceneManagement;
 
 public class InputManager : SystemSingleton<InputManager>
 {
-    private PlayerInput playerInput;
+    private static PlayerInput playerInput;
 
     protected override void Awake()
     {
         base.Awake();
         DontDestroyOnLoad(transform.gameObject);
-        playerInput = GetComponent<PlayerInput>();
     }
 
 
@@ -22,6 +21,8 @@ public class InputManager : SystemSingleton<InputManager>
     
     private void Start()
     {
+        playerInput = GetComponent<PlayerInput>();
+
         SceneManager.sceneLoaded += HandleLoadScene;
 
         // maps = playerInput.actions.actionMaps.ToArray();
@@ -68,7 +69,7 @@ public class InputManager : SystemSingleton<InputManager>
     //     playerInput.SwitchCurrentActionMap(_inputPriority.Values[_inputPriority.Count]);
     // }
 
-    public void HandleLoadScene(Scene scene, LoadSceneMode loadSceneMode)
+    public static void HandleLoadScene(Scene scene, LoadSceneMode loadSceneMode)
     {
         if(scene.buildIndex == 0)
             playerInput.SwitchCurrentActionMap("UI");
@@ -81,8 +82,8 @@ public class InputManager : SystemSingleton<InputManager>
         if(SceneManager.GetActiveScene().buildIndex != 0)
         {
             playerInput.SwitchCurrentActionMap("UI");
-            GameManager.Get().TogglePauseUI(true);
-            GameManager.Get().TogglePause(true);
+            GameManager.TogglePauseUI(true);
+            GameManager.TogglePause(true);
         }
     }
 
@@ -91,26 +92,24 @@ public class InputManager : SystemSingleton<InputManager>
         if(SceneManager.GetActiveScene().buildIndex != 0)
         {
             playerInput.SwitchCurrentActionMap("Player");
-            GameManager.Get().TogglePauseUI(false);
-            GameManager.Get().TogglePause(false);
+            GameManager.TogglePauseUI(false);
+            GameManager.TogglePause(false);
         }
     }
 
     public void OnBack()
     {
-        var gm = GameManager.Get();
-        
-        if (gm.overlaySettings.activeSelf)
+        if (GameManager.overlaySettings.activeSelf)
         {
-            gm.ToggleSettingsUI(false);
+            GameManager.ToggleSettingsUI(false);
         }
-        else if(gm.overlayPause.activeSelf)
+        else if(GameManager.overlayPause.activeSelf)
         {
             OnUnpause();
         }
-        else if (gm.overlayCredits.activeSelf)
+        else if (GameManager.overlayCredits.activeSelf)
         {
-            gm.ToggleCreditsUI(false);
+            GameManager.ToggleCreditsUI(false);
         }
     }
 
