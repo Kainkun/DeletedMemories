@@ -12,19 +12,19 @@ public class HoverToTargetState : State<Boss2>
     {
         Vector2 targetPos = stateMachine.attackTarget.transform.position;
         targetPos.y = stateMachine.torsoHeightOffset;
-        Vector2 torsoPos = stateMachine.torsoKinematic.CurrentPosition;
+        Vector2 torsoPos = stateMachine.torsoKinematic.NextPosition;
         if (Mathf.Abs(targetPos.x - torsoPos.x) > 0.001f)
         {
             Vector2 delta = (targetPos - torsoPos).normalized * (Time.fixedDeltaTime * speed);
 
             var torso = stateMachine.torsoKinematic;
-            torso.MovementUpdate(torso.CurrentPosition + delta);
+            torso.MovementUpdate(torso.NextPosition + delta);
 
             var right = stateMachine.rightHandStates.handKinematic;
-            right.MovementUpdate(right.CurrentPosition + delta);
+            right.MovementUpdate(right.NextPosition + delta);
 
             var left = stateMachine.leftHandStates.handKinematic;
-            left.MovementUpdate(left.CurrentPosition + delta);
+            left.MovementUpdate(left.NextPosition + delta);
         }
         else
         {

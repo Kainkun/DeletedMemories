@@ -10,18 +10,31 @@ tree("CheckDead")
 
 tree("BeAlive")
     fallback
-        tree("StepOnTarget")
-        tree("StepTowardsTarget")
+        tree("TargetVisible")
+        tree("Roam")
+        
+tree("TargetVisible")
+    sequence
+        IsTargetSeen
+        fallback
+            //tree("StepOnTarget")
+            tree("StepTowardsTarget")
         
 tree("StepOnTarget")
     sequence
         TargetInStepRange
         SetFootDestinationTowardsTarget
         MoveFootToDestination
+        MoveFootToGround
         SwapCurrentFoot
+        Wait(0.2)
 
 tree("StepTowardsTarget")
     sequence
         SetFootDestinationTowardsTarget
         MoveFootToDestination
+        //MoveFootToGround
         SwapCurrentFoot
+
+tree("Roam")
+    Succeed()
