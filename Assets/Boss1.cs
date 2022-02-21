@@ -112,8 +112,8 @@ public class Boss1 : MonoBehaviour
     [Task]
     void SetFootDestinationTowardsTarget()
     {
-        var targetDir = Mathf.Sign(target.position.x - currentFootTarget.NextPosition.x);
-        var pos = currentFootTarget.NextPosition + new Vector2(targetDir * stepDistance, stepHeight);
+        var targetDir = Mathf.Sign(target.position.x - currentFootTarget.NextFramePosition.x);
+        var pos = currentFootTarget.NextFramePosition + new Vector2(targetDir * stepDistance, stepHeight);
         var targetGroundHit = Physics2D.Raycast(pos, Vector2.down, Mathf.Infinity, GameData.defaultGroundMask);
         var localFootTargetPos = body.transform.InverseTransformPoint(targetGroundHit.point);
         if (currentFootTarget == _rightFootTarget)
@@ -213,7 +213,7 @@ public class Boss1 : MonoBehaviour
     {
         if (ThisTask.isStarting)
         {
-            ThisTask.data = new ArcTween(currentFootTarget.NextPosition, footDestiniation, stepHeight, feetSpeed);
+            ThisTask.data = new ArcTween(currentFootTarget.NextFramePosition, footDestiniation, stepHeight, feetSpeed);
         }
 
         ArcTween arcTween = ThisTask.GetData<ArcTween>();
@@ -222,14 +222,14 @@ public class Boss1 : MonoBehaviour
         {
             Vector2 delta = arcTween.GetDelta();
 
-            if (Physics2D.OverlapBox(currentFootTarget.NextPosition + delta, footSize, 0, GameData.defaultGroundMask))
+            if (Physics2D.OverlapBox(currentFootTarget.NextFramePosition + delta, footSize, 0, GameData.defaultGroundMask))
             {
                 Vector2 newDelta = delta;
                 newDelta.x = 0;
 
                 if (delta.y < 0)
                 {
-                    RaycastHit2D hit = Physics2D.BoxCast(currentFootTarget.NextPosition, footSize, 0, Vector2.down, delta.magnitude, GameData.defaultGroundMask);
+                    RaycastHit2D hit = Physics2D.BoxCast(currentFootTarget.NextFramePosition, footSize, 0, Vector2.down, delta.magnitude, GameData.defaultGroundMask);
                     if (hit)
                     {
                         newDelta.y = -hit.distance;
@@ -237,7 +237,7 @@ public class Boss1 : MonoBehaviour
                 }
                 else
                 {
-                    if (Physics2D.OverlapBox(currentFootTarget.NextPosition + newDelta, footSize, 0, GameData.defaultGroundMask))
+                    if (Physics2D.OverlapBox(currentFootTarget.NextFramePosition + newDelta, footSize, 0, GameData.defaultGroundMask))
                     {
                         newDelta = Vector2.zero;
                     }
@@ -277,7 +277,7 @@ public class Boss1 : MonoBehaviour
             if (delta.x > 0 && disconnectRight)
                 delta.x = Mathf.Min(delta.x, 0);
             
-            currentFootTarget.MovementUpdate(currentFootTarget.NextPosition + delta);
+            currentFootTarget.MovementUpdate(currentFootTarget.NextFramePosition + delta);
             body.MovementUpdate(GetTorsoCenter());
         }
         else
@@ -293,7 +293,7 @@ public class Boss1 : MonoBehaviour
     [Task]
     void MoveFootToGround()
     {
-        Vector2 p = currentFootTarget.NextPosition + (Vector2.down * feetSpeed * Time.fixedDeltaTime);
+        Vector2 p = currentFootTarget.NextFramePosition + (Vector2.down * feetSpeed * Time.fixedDeltaTime);
         currentFootTarget.MovementUpdate(p);
         body.MovementUpdate(GetTorsoCenter());
         if(Physics2D.OverlapBox(p, footSize, 0, GameData.defaultGroundMask))
