@@ -5,6 +5,7 @@ using Cinemachine;
 using Panda;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.U2D.IK;
 
 public class Boss1 : MonoBehaviour
@@ -40,6 +41,11 @@ public class Boss1 : MonoBehaviour
     {
         GetComponents();
         SetStartingVariables();
+    }
+
+    private void Start()
+    {
+        target = GameObject.FindObjectOfType<PlatformerController>().transform;
     }
 
     void GetComponents()
