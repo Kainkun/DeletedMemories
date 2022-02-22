@@ -16,23 +16,25 @@ tree("BeAlive")
 tree("TargetVisible")
     sequence
         IsTargetSeen
-        fallback
-            tree("StepOnTarget")
-            tree("StepTowardsTarget")
+        mute
+            fallback
+                tree("StepOnTarget")
+                tree("StepTowardsTarget")
+        SwapCurrentFoot
         
 tree("StepOnTarget")
     sequence
         TargetInStepRange
         SetFootDestinationOnTarget
         MoveFootToDestination
-        SwapCurrentFoot
         Wait(0.2)
 
 tree("StepTowardsTarget")
     sequence
         SetFootDestinationTowardsTarget
         MoveFootToDestination
-        SwapCurrentFoot
+        
+        
 
 tree("Roam")
     Succeed()

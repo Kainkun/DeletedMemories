@@ -757,12 +757,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48c191993a78ec9409be8abf246d2fe5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
   body: {fileID: 5401979171540004652}
   sightDistance: 50
   torsoHeightOffset: 5
   stepHeight: 7
-  stepDistance: 12
+  maxStepDistance: 12
   feetSpeed: 10
   rightFoot:
     solver: {fileID: 5401979172512709143}

@@ -31,7 +31,7 @@ public class MovingKinematic : MonoBehaviour
         rb.bodyType = RigidbodyType2D.Kinematic;
     }
 
-    void Awake()
+    void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         _startPosition = transform.position;

@@ -15,7 +15,7 @@ public class Boss1 : MonoBehaviour
     public float sightDistance = 20;
     public float torsoHeightOffset = 5;
     public float stepHeight = 5;
-    public float stepDistance = 12;
+    public float maxStepDistance = 12;
     public float feetSpeed = 10;
     public FootData rightFoot;
     public FootData leftFoot;
@@ -48,11 +48,20 @@ public class Boss1 : MonoBehaviour
     private void Awake()
     {
         Setup();
-    }
-
-    private void Start()
-    {
+        
         _target = GameObject.FindObjectOfType<PlatformerController>().transform;
+
+        leftFoot.collider.enabled = false;
+        rightFoot.collider.enabled = false;
+        RaycastHit2D hitLeft = Physics2D.BoxCast(leftFoot.targetMovingKinematic.transform.position, FootData.size, 0, Vector2.down, torsoHeightOffset + FootData.size.y, GameData.defaultGroundMask);
+        RaycastHit2D hitRight = Physics2D.BoxCast(rightFoot.targetMovingKinematic.transform.position, FootData.size, 0, Vector2.down, torsoHeightOffset + FootData.size.y, GameData.defaultGroundMask);
+        leftFoot.collider.enabled = true;
+        rightFoot.collider.enabled = true;
+        if (hitLeft)
+            leftFoot.targetMovingKinematic.transform.position += Vector3.down * hitLeft.distance;
+        if (hitRight)
+            rightFoot.targetMovingKinematic.transform.position += Vector3.down * hitRight.distance;
+        body.transform.position = GetTorsoCenter();
     }
 
 
@@ -94,7 +103,7 @@ public class Boss1 : MonoBehaviour
     [Task]
     bool TargetInStepRange()
     {
-        return Vector2.Distance(body.transform.position, _target.position) <= stepDistance;
+        return Vector2.Distance(body.transform.position, _target.position) <= maxStepDistance;
     }
 
     [Task]
@@ -106,29 +115,62 @@ public class Boss1 : MonoBehaviour
 
         var localFootTargetPos = body.transform.InverseTransformPoint(targetGroundHit.point);
         if (currentFoot == rightFoot)
-            localFootTargetPos.x = Mathf.Clamp(localFootTargetPos.x, 0, stepDistance);
+            localFootTargetPos.x = Mathf.Clamp(localFootTargetPos.x, 0, maxStepDistance);
         else //currentFoot == leftFoot
-            localFootTargetPos.x = Mathf.Clamp(localFootTargetPos.x, -stepDistance, 0);
+            localFootTargetPos.x = Mathf.Clamp(localFootTargetPos.x, -maxStepDistance, 0);
         currentFoot.destiniation = body.transform.TransformPoint(localFootTargetPos);
 
         ThisTask.Succeed();
     }
-    
+
     [Task]
     void SetFootDestinationTowardsTarget()
     {
-        var targetDir = Mathf.Sign(_target.position.x - currentFoot.targetMovingKinematic.NextFramePosition.x);
-        var pos = currentFoot.targetMovingKinematic.NextFramePosition + new Vector2(targetDir * stepDistance, stepHeight);
+        var targetDirection = Mathf.Sign(_target.position.x - currentFoot.targetMovingKinematic.NextFramePosition.x);
+    
+        float tryStepDistance;
+        //right foot going right or left foot going left
+        if ((targetDirection > 0 && currentFoot == rightFoot) || (targetDirection < 0 && currentFoot == leftFoot))
+            tryStepDistance = maxStepDistance - Mathf.Abs(body.NextFramePosition.x - currentFoot.targetMovingKinematic.NextFramePosition.x);
+        //left foot going right or right foot going left
+        else
+            tryStepDistance = Mathf.Abs(body.NextFramePosition.x - currentFoot.targetMovingKinematic.NextFramePosition.x) - ((FootData.size.x / 2) + 0.1f);
+        
         currentFoot.collider.enabled = false;
-        var targetGroundHit = Physics2D.Raycast(pos, Vector2.down, Mathf.Infinity, GameData.defaultGroundMask);
+        var FootAtStepHeight = currentFoot.targetMovingKinematic.NextFramePosition + new Vector2(0, stepHeight);
+        //float dist = stepDistance - Mathf.dis (body.NextFramePosition.x - currentFoot.targetMovingKinematic.NextFramePosition.x);
+        var horizontalHit = Physics2D.BoxCast(FootAtStepHeight, FootData.size, 0, new Vector2(targetDirection, 0), tryStepDistance, GameData.defaultGroundMask);
+        
+        float finalStepDistance;
+        if (horizontalHit)
+            finalStepDistance = horizontalHit.distance - 0.1f;
+        else
+            finalStepDistance = tryStepDistance;
+        
+        if(currentFoot == leftFoot)
+            Debug.DrawRay(FootAtStepHeight, new Vector2(targetDirection * finalStepDistance, 0), Color.green, 1);
+        else
+            Debug.DrawRay(FootAtStepHeight, new Vector2(targetDirection * finalStepDistance, 0), Color.red, 1);
+        
+        Vector2 groundCastTop = FootAtStepHeight + new Vector2(targetDirection * finalStepDistance, 0);
+        var groundCastHit = Physics2D.Raycast(groundCastTop, Vector2.down, Mathf.Infinity, GameData.defaultGroundMask);
         currentFoot.collider.enabled = true;
-        var localFootTargetPos = body.transform.InverseTransformPoint(targetGroundHit.point);
-        if (currentFoot == rightFoot)
-            localFootTargetPos.x = Mathf.Clamp(localFootTargetPos.x, 0, stepDistance);
-        else //currentFoot == leftFoot
-            localFootTargetPos.x = Mathf.Clamp(localFootTargetPos.x, -stepDistance, 0);
-        currentFoot.destiniation = body.transform.TransformPoint(localFootTargetPos);
-
+        
+        print(groundCastHit.transform);
+        if(groundCastHit.transform == null)
+        {
+            currentFoot.destiniation = currentFoot.targetMovingKinematic.NextFramePosition;
+            ThisTask.Fail();
+            return;
+        }
+        
+        if(currentFoot == leftFoot)
+            Debug.DrawRay(groundCastTop, Vector3.down * groundCastHit.distance, Color.green, 1);
+        else
+            Debug.DrawRay(groundCastTop, Vector3.down * groundCastHit.distance, Color.red, 1);
+        
+        currentFoot.destiniation = groundCastHit.point;
+    
         ThisTask.Succeed();
     }
     
