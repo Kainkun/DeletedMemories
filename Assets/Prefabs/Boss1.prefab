@@ -764,8 +764,24 @@ MonoBehaviour:
   stepHeight: 7
   stepDistance: 12
   feetSpeed: 10
-  rightFootSolver: {fileID: 5401979172512709143}
-  leftFootSolver: {fileID: 5401979173073545154}
+  rightFoot:
+    solver: {fileID: 5401979172512709143}
+    effectorTransform: {fileID: 0}
+    targetMovingKinematic: {fileID: 0}
+    collider: {fileID: 0}
+    destiniation: {x: 0, y: 0}
+  leftFoot:
+    solver: {fileID: 5401979173073545154}
+    effectorTransform: {fileID: 0}
+    targetMovingKinematic: {fileID: 0}
+    collider: {fileID: 0}
+    destiniation: {x: 0, y: 0}
+  currentFoot:
+    solver: {fileID: 0}
+    effectorTransform: {fileID: 0}
+    targetMovingKinematic: {fileID: 0}
+    collider: {fileID: 0}
+    destiniation: {x: 0, y: 0}
 --- !u!114 &5401979172304723080
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1457,7 +1473,7 @@ GameObject:
   m_Layer: 0
   m_Name: Stomp_1
   m_TagString: Untagged
-  m_Icon: {fileID: 6519382022992737161, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -1575,7 +1591,7 @@ GameObject:
   - component: {fileID: 5401979172813789045}
   - component: {fileID: 5401979172813788939}
   - component: {fileID: 5401979172813788938}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: RightFootTarget
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2139,7 +2155,7 @@ GameObject:
   - component: {fileID: 5401979173444283290}
   - component: {fileID: 5401979173444283288}
   - component: {fileID: 5401979173444283295}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: LeftFootTarget
   m_TagString: Untagged
   m_Icon: {fileID: 0}

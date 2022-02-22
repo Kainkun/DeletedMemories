@@ -10,7 +10,7 @@ public class Entity : MonoBehaviour
     public bool invulnerable;
     public int currentHealth;
 
-    private void Start()
+    protected virtual void Awake()
     {
         currentHealth = maxHealth;
     }

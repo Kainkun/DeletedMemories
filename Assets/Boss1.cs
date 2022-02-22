@@ -10,58 +10,58 @@ using UnityEngine.U2D.IK;
 
 public class Boss1 : MonoBehaviour
 {
-    public Transform target;
+    private Transform _target;
     public MovingKinematic body;
     public float sightDistance = 20;
     public float torsoHeightOffset = 5;
     public float stepHeight = 5;
     public float stepDistance = 12;
     public float feetSpeed = 10;
-    public LimbSolver2D rightFootSolver;
-    public LimbSolver2D leftFootSolver;
-    private MovingKinematic _rightFootTarget;
-    private MovingKinematic _leftFootTarget;
-    private Transform _rightFootTransform;
-    private Transform _leftFootTransform;
+    public FootData rightFoot;
+    public FootData leftFoot;
+    [HideInInspector]
+    public FootData currentFoot;
 
-    private MovingKinematic currentFootTarget;
-    private Transform currentFootTransform;
-    private Vector2 footDestiniation;
-    private Vector2 footSize;
-    //private Vector2 footHitboxSize;
-    
-    
-    private void OnValidate()
+    [Serializable]
+    public class FootData
     {
-        GetComponents();
-        SetStartingVariables();
+        public void Setup()
+        {
+            effectorTransform = solver.GetChain(0).effector;
+            targetMovingKinematic = solver.GetChain(0).target.GetComponent<MovingKinematic>();
+            collider = targetMovingKinematic.GetComponent<BoxCollider2D>();
+            size = collider.size;
+        }
+
+        public static Vector2 size;
+        public LimbSolver2D solver;
+        [HideInInspector]
+        public Transform effectorTransform;
+        [HideInInspector]
+        public MovingKinematic targetMovingKinematic;
+        [HideInInspector]
+        public BoxCollider2D collider;
+        [HideInInspector]
+        public Vector2 destiniation;
     }
 
     private void Awake()
     {
-        GetComponents();
-        SetStartingVariables();
+        Setup();
     }
 
     private void Start()
     {
-        target = GameObject.FindObjectOfType<PlatformerController>().transform;
+        _target = GameObject.FindObjectOfType<PlatformerController>().transform;
     }
 
-    void GetComponents()
+
+    void Setup()
     {
-        _rightFootTarget = rightFootSolver.GetChain(0).target.GetComponent<MovingKinematic>();
-        _leftFootTarget =  leftFootSolver.GetChain(0).target.GetComponent<MovingKinematic>();
-        _rightFootTransform = rightFootSolver.GetChain(0).effector;
-        _leftFootTransform = leftFootSolver.GetChain(0).effector;
+        rightFoot.Setup();
+        leftFoot.Setup();
         
-        footSize = _rightFootTarget.GetComponent<BoxCollider2D>().size;
-    }
-
-    void SetStartingVariables()
-    {
-        currentFootTarget = _leftFootTarget;
-        currentFootTransform = _leftFootTransform;
+        currentFoot = leftFoot;
         
         // footHitboxSize = footSize;
         // footHitboxSize.x += footHitboxThickness * 2;
@@ -86,25 +86,30 @@ public class Boss1 : MonoBehaviour
     [Task]
     bool IsTargetSeen()
     {
-        return Vector2.Distance(body.transform.position, target.position) <= sightDistance;
+        if (!_target)
+            return false;
+        return Vector2.Distance(body.transform.position, _target.position) <= sightDistance;
     }
 
     [Task]
     bool TargetInStepRange()
     {
-        return Vector2.Distance(body.transform.position, target.position) <= stepDistance;
+        return Vector2.Distance(body.transform.position, _target.position) <= stepDistance;
     }
 
     [Task]
     void SetFootDestinationOnTarget()
     {
-        var targetGroundHit = Physics2D.Raycast(target.position, Vector2.down, Mathf.Infinity, GameData.defaultGroundMask);
+        currentFoot.collider.enabled = false;
+        var targetGroundHit = Physics2D.Raycast(_target.position, Vector2.down, Mathf.Infinity, GameData.defaultGroundMask);
+        currentFoot.collider.enabled = true;
+
         var localFootTargetPos = body.transform.InverseTransformPoint(targetGroundHit.point);
-        if (currentFootTarget == _rightFootTarget)
+        if (currentFoot == rightFoot)
             localFootTargetPos.x = Mathf.Clamp(localFootTargetPos.x, 0, stepDistance);
         else //currentFoot == leftFoot
             localFootTargetPos.x = Mathf.Clamp(localFootTargetPos.x, -stepDistance, 0);
-        footDestiniation = body.transform.TransformPoint(localFootTargetPos);
+        currentFoot.destiniation = body.transform.TransformPoint(localFootTargetPos);
 
         ThisTask.Succeed();
     }
@@ -112,15 +117,17 @@ public class Boss1 : MonoBehaviour
     [Task]
     void SetFootDestinationTowardsTarget()
     {
-        var targetDir = Mathf.Sign(target.position.x - currentFootTarget.NextFramePosition.x);
-        var pos = currentFootTarget.NextFramePosition + new Vector2(targetDir * stepDistance, stepHeight);
+        var targetDir = Mathf.Sign(_target.position.x - currentFoot.targetMovingKinematic.NextFramePosition.x);
+        var pos = currentFoot.targetMovingKinematic.NextFramePosition + new Vector2(targetDir * stepDistance, stepHeight);
+        currentFoot.collider.enabled = false;
         var targetGroundHit = Physics2D.Raycast(pos, Vector2.down, Mathf.Infinity, GameData.defaultGroundMask);
+        currentFoot.collider.enabled = true;
         var localFootTargetPos = body.transform.InverseTransformPoint(targetGroundHit.point);
-        if (currentFootTarget == _rightFootTarget)
+        if (currentFoot == rightFoot)
             localFootTargetPos.x = Mathf.Clamp(localFootTargetPos.x, 0, stepDistance);
         else //currentFoot == leftFoot
             localFootTargetPos.x = Mathf.Clamp(localFootTargetPos.x, -stepDistance, 0);
-        footDestiniation = body.transform.TransformPoint(localFootTargetPos);
+        currentFoot.destiniation = body.transform.TransformPoint(localFootTargetPos);
 
         ThisTask.Succeed();
     }
@@ -128,22 +135,16 @@ public class Boss1 : MonoBehaviour
     [Task]
     void SwapCurrentFoot()
     {
-        if (currentFootTarget == _rightFootTarget)
-        {
-            currentFootTarget = _leftFootTarget;
-            currentFootTransform = _leftFootTransform;
-        }
+        if (currentFoot == rightFoot)
+            currentFoot = leftFoot;
         else
-        {
-            currentFootTarget = _rightFootTarget;
-            currentFootTransform = _rightFootTransform;
-        }
+            currentFoot = rightFoot;
         ThisTask.Succeed();
     }
     
     public Vector2 GetTorsoCenter()
     {
-        Vector2 footAverage = (_leftFootTarget.transform.position + _rightFootTarget.transform.position) / 2;
+        Vector2 footAverage = (leftFoot.targetMovingKinematic.transform.position + rightFoot.targetMovingKinematic.transform.position) / 2;
         return (Vector2.up * torsoHeightOffset) + footAverage;
     }
     
@@ -213,7 +214,7 @@ public class Boss1 : MonoBehaviour
     {
         if (ThisTask.isStarting)
         {
-            ThisTask.data = new ArcTween(currentFootTarget.NextFramePosition, footDestiniation, stepHeight, feetSpeed);
+            ThisTask.data = new ArcTween(currentFoot.targetMovingKinematic.NextFramePosition, currentFoot.destiniation, stepHeight, feetSpeed);
         }
 
         ArcTween arcTween = ThisTask.GetData<ArcTween>();
@@ -222,14 +223,15 @@ public class Boss1 : MonoBehaviour
         {
             Vector2 delta = arcTween.GetDelta();
 
-            if (Physics2D.OverlapBox(currentFootTarget.NextFramePosition + delta, footSize, 0, GameData.defaultGroundMask))
+            currentFoot.collider.enabled = false;
+            if (Physics2D.OverlapBox(currentFoot.targetMovingKinematic.NextFramePosition + delta, FootData.size, 0, GameData.defaultGroundMask))
             {
                 Vector2 newDelta = delta;
                 newDelta.x = 0;
 
                 if (delta.y < 0)
                 {
-                    RaycastHit2D hit = Physics2D.BoxCast(currentFootTarget.NextFramePosition, footSize, 0, Vector2.down, delta.magnitude, GameData.defaultGroundMask);
+                    RaycastHit2D hit = Physics2D.BoxCast(currentFoot.targetMovingKinematic.NextFramePosition, FootData.size, 0, Vector2.down, delta.magnitude, GameData.defaultGroundMask);
                     if (hit)
                     {
                         newDelta.y = -hit.distance;
@@ -237,7 +239,7 @@ public class Boss1 : MonoBehaviour
                 }
                 else
                 {
-                    if (Physics2D.OverlapBox(currentFootTarget.NextFramePosition + newDelta, footSize, 0, GameData.defaultGroundMask))
+                    if (Physics2D.OverlapBox(currentFoot.targetMovingKinematic.NextFramePosition + newDelta, FootData.size, 0, GameData.defaultGroundMask))
                     {
                         newDelta = Vector2.zero;
                     }
@@ -245,6 +247,7 @@ public class Boss1 : MonoBehaviour
 
                 delta = newDelta;
             }
+            currentFoot.collider.enabled = true;
             
             // if (Physics2D.OverlapBox(currentFootTarget.NextPosition + delta, footSize, 0, GameData.defaultGroundMask))
             // {
@@ -259,8 +262,8 @@ public class Boss1 : MonoBehaviour
             //     }
             // }
             
-            Vector2 leftFootDisconnect = _leftFootTransform.position - _leftFootTarget.transform.position;
-            Vector2 rightFootDisconnect = _rightFootTransform.position - _rightFootTarget.transform.position;
+            Vector2 leftFootDisconnect = leftFoot.effectorTransform.position - leftFoot.targetMovingKinematic.transform.position;
+            Vector2 rightFootDisconnect = rightFoot.effectorTransform.position - rightFoot.targetMovingKinematic.transform.position;
 
             float tolerance = 0.01f;
             bool disconnectRight = leftFootDisconnect.x > tolerance || rightFootDisconnect.x > tolerance;
@@ -277,12 +280,13 @@ public class Boss1 : MonoBehaviour
             if (delta.x > 0 && disconnectRight)
                 delta.x = Mathf.Min(delta.x, 0);
             
-            currentFootTarget.MovementUpdate(currentFootTarget.NextFramePosition + delta);
+            Debug.DrawRay(currentFoot.targetMovingKinematic.NextFramePosition + delta, Vector3.up, Color.cyan);
+            currentFoot.targetMovingKinematic.MovementUpdate(currentFoot.targetMovingKinematic.NextFramePosition + delta);
             body.MovementUpdate(GetTorsoCenter());
         }
         else
         {
-            currentFootTarget.MovementUpdate();
+            currentFoot.targetMovingKinematic.MovementUpdate();
             body.MovementUpdate(GetTorsoCenter());
             
             GetComponent<CinemachineImpulseSource>().GenerateImpulse();
@@ -293,10 +297,10 @@ public class Boss1 : MonoBehaviour
     [Task]
     void MoveFootToGround()
     {
-        Vector2 p = currentFootTarget.NextFramePosition + (Vector2.down * feetSpeed * Time.fixedDeltaTime);
-        currentFootTarget.MovementUpdate(p);
+        Vector2 p = currentFoot.targetMovingKinematic.NextFramePosition + (Vector2.down * feetSpeed * Time.fixedDeltaTime);
+        currentFoot.targetMovingKinematic.MovementUpdate(p);
         body.MovementUpdate(GetTorsoCenter());
-        if(Physics2D.OverlapBox(p, footSize, 0, GameData.defaultGroundMask))
+        if(Physics2D.OverlapBox(p, FootData.size, 0, GameData.defaultGroundMask))
         {
             ThisTask.Succeed();
         }
@@ -305,8 +309,8 @@ public class Boss1 : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.magenta;
-        if(footDestiniation != Vector2.zero)
-            Gizmos.DrawSphere(footDestiniation, 1);
+        if(currentFoot.destiniation != Vector2.zero)
+            Gizmos.DrawSphere(currentFoot.destiniation, 1);
 
         // Vector2 l = leftFoot.transform.position;
         // l.y += (footHitboxThickness/2);
