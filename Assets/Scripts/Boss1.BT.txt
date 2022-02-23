@@ -15,7 +15,7 @@ tree("BeAlive")
         
 tree("TargetVisible")
     sequence
-        IsTargetSeen
+        SeesTarget
         mute
             fallback
                 tree("StepOnTarget")

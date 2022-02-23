@@ -22,6 +22,9 @@ public class Boss1 : MonoBehaviour
     [HideInInspector]
     public FootData currentFoot;
 
+    private Eye eye;
+    [Task] private bool SeesTarget => eye.seesTarget;
+
     [Serializable]
     public class FootData
     {
@@ -50,6 +53,7 @@ public class Boss1 : MonoBehaviour
         Setup();
         
         _target = GameObject.FindObjectOfType<PlatformerController>().transform;
+        eye = GetComponentInChildren<Eye>();
 
         leftFoot.collider.enabled = false;
         rightFoot.collider.enabled = false;
@@ -91,15 +95,7 @@ public class Boss1 : MonoBehaviour
         ThisTask.Succeed();
         
     }
-
-    [Task]
-    bool IsTargetSeen()
-    {
-        if (!_target)
-            return false;
-        return Vector2.Distance(body.transform.position, _target.position) <= sightDistance;
-    }
-
+    
     [Task]
     bool TargetInStepRange()
     {

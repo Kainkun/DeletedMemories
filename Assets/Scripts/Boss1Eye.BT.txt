@@ -1,0 +1,38 @@
+tree("Root")
+    sequence
+        tree("Sense")
+        tree("Decide")
+        tree("Act")
+
+            
+tree("Sense")
+    sequence
+        SaccadeCooldownUpdate
+        CheckSeesTarget
+    
+tree("Decide")
+    sequence
+        tree("DecideLookDirection")
+        tree("DecidePupilSize")
+            
+tree("DecideLookDirection")
+    fallback
+        sequence
+            seesTarget
+            SetLookDirectionToTarget
+        sequence
+            not saccadeInCooldown
+            SetRandomLookDirection
+        Succeed
+        
+tree("DecidePupilSize")
+    fallback
+        sequence
+            seesTarget
+            SetPupilSize(0.25)
+        SetPupilSize(0.75)
+
+tree("Act")
+    sequence
+        LerpEyePosition
+        LerpPupilSize

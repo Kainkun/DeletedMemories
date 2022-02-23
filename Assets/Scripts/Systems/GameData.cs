@@ -10,6 +10,7 @@ public class GameData
     public static LayerMask defaultGroundMask;
     public static LayerMask platformMask;
     public static LayerMask traversableMask;
+    public static LayerMask opaqueMask;
     
     public void SetData()
     {
@@ -17,5 +18,6 @@ public class GameData
         defaultGroundMask = LayerMask.GetMask("Default");
         platformMask = LayerMask.GetMask("Platform");
         traversableMask =  defaultGroundMask | platformMask;
+        opaqueMask = playerMask | defaultGroundMask;
     }
 }
