@@ -5,7 +5,7 @@ using UnityEngine;
 using Panda;
 using Random = UnityEngine.Random;
 
-public class Eye : MonoBehaviour
+public class Eye : Entity
 {
     private Transform pupil;
     private Transform target;

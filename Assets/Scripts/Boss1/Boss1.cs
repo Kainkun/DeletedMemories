@@ -23,7 +23,14 @@ public class Boss1 : MonoBehaviour
     public FootData currentFoot;
 
     private Eye eye;
-    [Task] private bool SeesTarget => eye.seesTarget;
+
+    [Task]
+    private bool SeesTarget()
+    {
+        if(eye)
+            return eye.seesTarget;
+        return false;
+    }
 
     [Serializable]
     public class FootData
@@ -152,7 +159,6 @@ public class Boss1 : MonoBehaviour
         var groundCastHit = Physics2D.Raycast(groundCastTop, Vector2.down, Mathf.Infinity, GameData.defaultGroundMask);
         currentFoot.collider.enabled = true;
         
-        print(groundCastHit.transform);
         if(groundCastHit.transform == null)
         {
             currentFoot.destiniation = currentFoot.targetMovingKinematic.NextFramePosition;
@@ -174,6 +180,16 @@ public class Boss1 : MonoBehaviour
     void SwapCurrentFoot()
     {
         if (currentFoot == rightFoot)
+            currentFoot = leftFoot;
+        else
+            currentFoot = rightFoot;
+        ThisTask.Succeed();
+    }
+    
+    [Task]
+    void SelectFootClosestToTarget()
+    {
+        if (_target.position.x < body.NextFramePosition.x)
             currentFoot = leftFoot;
         else
             currentFoot = rightFoot;

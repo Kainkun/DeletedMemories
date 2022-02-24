@@ -14,7 +14,7 @@ public class GameData
     
     public void SetData()
     {
-        playerMask = LayerMask.GetMask("Player");
+        playerMask = LayerMask.GetMask("Player") | LayerMask.GetMask("PlayerPlatformFall");
         defaultGroundMask = LayerMask.GetMask("Default");
         platformMask = LayerMask.GetMask("Platform");
         traversableMask =  defaultGroundMask | platformMask;

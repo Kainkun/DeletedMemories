@@ -20,11 +20,11 @@ tree("TargetVisible")
             fallback
                 tree("StepOnTarget")
                 tree("StepTowardsTarget")
-        SwapCurrentFoot
         
 tree("StepOnTarget")
     sequence
         TargetInStepRange
+        SelectFootClosestToTarget
         SetFootDestinationOnTarget
         MoveFootToDestination
         Wait(0.2)
@@ -33,6 +33,7 @@ tree("StepTowardsTarget")
     sequence
         SetFootDestinationTowardsTarget
         MoveFootToDestination
+        SwapCurrentFoot
         
         
 
