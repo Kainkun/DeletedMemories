@@ -480,8 +480,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 3
-  invulnerable: 0
+  ignoreDamage: 0
   currentHealth: 0
+  childrenEntities: []
+  destroyOnDeath: 1
+  isDead: 0
 --- !u!1 &6587944478557316621
 GameObject:
   m_ObjectHideFlags: 0
