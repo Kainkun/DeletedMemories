@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.U2D.IK;
 
-public class Boss1 : MonoBehaviour
+public class Boss1 : Entity
 {
     private Transform _target;
     public MovingKinematic body;
@@ -55,8 +55,9 @@ public class Boss1 : MonoBehaviour
         public Vector2 destiniation;
     }
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         Setup();
         
         _target = GameObject.FindObjectOfType<PlatformerController>().transform;
@@ -89,20 +90,15 @@ public class Boss1 : MonoBehaviour
     }
 
 
-    [Task]
-    bool IsAlive()
+    protected override void ChildDeath(Entity child)
     {
-        return true;
+        base.ChildDeath(child);
+        if(childrenEntities.Count <= 0)
+            Die();
     }
 
-    [Task]
-    void Die()
-    {
-        Destroy(gameObject);
-        ThisTask.Succeed();
-        
-    }
-    
+    [Task] private bool IsDead => base.isDead;
+
     [Task]
     bool TargetInStepRange()
     {

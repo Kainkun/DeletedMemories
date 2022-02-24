@@ -5,8 +5,8 @@ tree("Root")
 
 tree("CheckDead")
     sequence
-        not IsAlive
-        Die
+        IsDead
+        tree("Die")
 
 tree("BeAlive")
     fallback
@@ -34,8 +34,9 @@ tree("StepTowardsTarget")
         SetFootDestinationTowardsTarget
         MoveFootToDestination
         SwapCurrentFoot
-        
-        
 
 tree("Roam")
+    Succeed()
+    
+tree("Die")
     Succeed()
