@@ -33,10 +33,10 @@ public class PlayerCombat : MonoBehaviour
         ContactFilter2D contactFilter = new ContactFilter2D();
         contactFilter.SetLayerMask(~GameData.playerMask);
         contactFilter.useTriggers = true;
-        List<Collider2D> results = new List<Collider2D>();
         attackCollider.enabled = true;
+        attackSpriteRenderer.enabled = true;
+        List<Collider2D> results = new List<Collider2D>();
         attackCollider.OverlapCollider(contactFilter, results);
-        attackCollider.enabled = false;
         foreach (Collider2D result in results)
         {
             Entity entity = result.GetComponent<Entity>();
@@ -51,8 +51,8 @@ public class PlayerCombat : MonoBehaviour
 
     IEnumerator CR_Attack()
     {
-        attackSpriteRenderer.enabled = true;
         yield return new WaitForSeconds(0.1f);
         attackSpriteRenderer.enabled = false;
+        attackCollider.enabled = false;
     }
 }

@@ -337,24 +337,24 @@ public class Boss1 : Entity
         else
         {
             currentFoot.targetMovingKinematic.MovementUpdate();
-            body.MovementUpdate(GetTorsoCenter());
+            body.MovementUpdate();
             
             GetComponent<CinemachineImpulseSource>().GenerateImpulse();
             ThisTask.Succeed();
         }
     }
 
-    [Task]
-    void MoveFootToGround()
-    {
-        Vector2 p = currentFoot.targetMovingKinematic.NextFramePosition + (Vector2.down * feetSpeed * Time.fixedDeltaTime);
-        currentFoot.targetMovingKinematic.MovementUpdate(p);
-        body.MovementUpdate(GetTorsoCenter());
-        if(Physics2D.OverlapBox(p, FootData.size, 0, GameData.defaultGroundMask))
-        {
-            ThisTask.Succeed();
-        }
-    }
+    // [Task]
+    // void MoveFootToGround()
+    // {
+    //     Vector2 p = currentFoot.targetMovingKinematic.NextFramePosition + (Vector2.down * feetSpeed * Time.fixedDeltaTime);
+    //     currentFoot.targetMovingKinematic.MovementUpdate(p);
+    //     body.MovementUpdate(GetTorsoCenter());
+    //     if(Physics2D.OverlapBox(p, FootData.size, 0, GameData.defaultGroundMask))
+    //     {
+    //         ThisTask.Succeed();
+    //     }
+    // }
 
     private void OnDrawGizmos()
     {
