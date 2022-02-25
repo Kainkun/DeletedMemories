@@ -2181,5 +2181,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlatformerPlayer
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1007873088512976279, guid: e45aa09a3fa112e46a20dcb107c2ae89, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: e45aa09a3fa112e46a20dcb107c2ae89, type: 3}

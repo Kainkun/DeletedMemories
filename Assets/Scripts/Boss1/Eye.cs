@@ -63,6 +63,11 @@ public class Eye : Entity
         directionToLook = (collision.GetContact(0).point - (Vector2)transform.position).normalized;
     }
     
+    public void BringAttentionTo(Collider2D col)
+    {
+        directionToLook = ((Vector2)col.transform.position - (Vector2)transform.position).normalized;
+    }
+    
     public void BringAttentionTo(Vector2 position)
     {
         directionToLook = (position - (Vector2)transform.position).normalized;

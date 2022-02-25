@@ -2075,7 +2075,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6522b0aaae11197458d5e817599897b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnCollisionEnter:
+  collisionLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  triggerLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  onCollisionEnter:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4075043611963830554}
@@ -2090,7 +2096,25 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  OnCollisionExit:
+  onCollisionExit:
+    m_PersistentCalls:
+      m_Calls: []
+  onTriggerEnter:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4075043611963830554}
+        m_TargetAssemblyTypeName: Eye, Assembly-CSharp
+        m_MethodName: BringAttentionTo
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onTriggerExit:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1 &5401979172986192575
@@ -2670,7 +2694,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6522b0aaae11197458d5e817599897b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnCollisionEnter:
+  collisionLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  triggerLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  onCollisionEnter:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4075043611963830554}
@@ -2685,7 +2715,25 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  OnCollisionExit:
+  onCollisionExit:
+    m_PersistentCalls:
+      m_Calls: []
+  onTriggerEnter:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4075043611963830554}
+        m_TargetAssemblyTypeName: Eye, Assembly-CSharp
+        m_MethodName: BringAttentionTo
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onTriggerExit:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1 &5401979173593077406
@@ -2885,7 +2933,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6522b0aaae11197458d5e817599897b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnCollisionEnter:
+  collisionLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  triggerLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  onCollisionEnter:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4075043611963830554}
@@ -2900,7 +2954,25 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  OnCollisionExit:
+  onCollisionExit:
+    m_PersistentCalls:
+      m_Calls: []
+  onTriggerEnter:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4075043611963830554}
+        m_TargetAssemblyTypeName: Eye, Assembly-CSharp
+        m_MethodName: BringAttentionTo
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onTriggerExit:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1001 &4381484707699558404
@@ -2986,7 +3058,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6522b0aaae11197458d5e817599897b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnCollisionEnter:
+  collisionLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  triggerLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  onCollisionEnter:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4075043611963830554}
@@ -3001,6 +3079,24 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  OnCollisionExit:
+  onCollisionExit:
+    m_PersistentCalls:
+      m_Calls: []
+  onTriggerEnter:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4075043611963830554}
+        m_TargetAssemblyTypeName: Eye, Assembly-CSharp
+        m_MethodName: BringAttentionTo
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onTriggerExit:
     m_PersistentCalls:
       m_Calls: []
