@@ -22,8 +22,16 @@ public class PlayerCombat : MonoBehaviour
 
     void HandleMove(Vector2 value)
     {
-        if(value.magnitude > 0.1f)
-            direction = value;
+        // if (value.magnitude > 0.1f)
+        //     direction = value;
+        if(value.y > 0.1f)
+            direction = Vector2.up;
+        else if (value.y < -0.1f)
+            direction = Vector2.down;
+        else if (value.x > 0.1f)
+            direction = Vector2.right;
+        else if (value.x < -0.1f)
+            direction = Vector2.left;
     }
 
     void Attack()
