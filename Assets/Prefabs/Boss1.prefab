@@ -121,7 +121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6d7b455978c741409a5292e37b313be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 3
+  maxHealth: 20
   ignoreDamage: 0
   currentHealth: 0
   childrenEntities: []
@@ -129,9 +129,9 @@ MonoBehaviour:
   isDead: 0
   fov: 45
   saccadeCooldown: 2
-  pupilSpeed: 1
+  pupilSpeed: 4
   pupilSizeSpeed: 1
-  pupilClamp: 0.25
+  pupilClamp: 1
   sightDistance: 50
   timeSinceSaccade: Infinity
   peripheryRadius: 6.82

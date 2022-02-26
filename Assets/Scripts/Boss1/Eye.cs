@@ -103,8 +103,10 @@ public class Eye : Entity
     [Task]
     public void LerpEyePosition()
     {
-        Vector2 targetLocalPosition = directionToLook * pupilClamp;
-        if(Vector2.Distance(pupil.transform.localPosition, targetLocalPosition) <= 0.01f)
+        Vector2 targetPosition = (Vector2)transform.position + (directionToLook * pupilClamp);
+        Vector2 currentPosition = pupil.transform.position;
+
+        if(Vector2.Distance(currentPosition, targetPosition) <= 0.01f)
         {
             ThisTask.Succeed();
             return;
@@ -112,15 +114,14 @@ public class Eye : Entity
         
         eyeMoving = true;
         timeSinceSaccade = 0;
-        var localPosition = pupil.transform.localPosition;
-        localPosition = Vector2.MoveTowards(localPosition, targetLocalPosition, pupilSpeed * Time.deltaTime);
-        pupil.transform.localPosition = localPosition;
-        directionLooking = localPosition.normalized;
-        if(Vector2.Distance(pupil.transform.localPosition, targetLocalPosition) <= 0.01f)
+        currentPosition = Vector2.MoveTowards(currentPosition, targetPosition, pupilSpeed * Time.deltaTime);
+        directionLooking = (currentPosition - (Vector2)transform.position).normalized;
+        if(Vector2.Distance(currentPosition, targetPosition) <= 0.01f)
         {
-            pupil.transform.localPosition = targetLocalPosition;
+            currentPosition = targetPosition;
             eyeMoving = false;
         }
+        pupil.transform.position = currentPosition;
         ThisTask.Succeed();
     }
 

@@ -4177,10 +4177,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4075043611963830554, guid: eb5d1d3767cc1494690784f8f659c16a, type: 3}
-      propertyPath: maxHealth
-      value: 20
-      objectReference: {fileID: 0}
     - target: {fileID: 5401979171647461884, guid: eb5d1d3767cc1494690784f8f659c16a, type: 3}
       propertyPath: m_LocalRotation.w
       value: -0.016284347
