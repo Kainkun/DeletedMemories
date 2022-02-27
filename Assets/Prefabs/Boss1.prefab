@@ -102,7 +102,7 @@ MonoBehaviour:
   scripts:
   - {fileID: 4900000, guid: 8c8cb6d9c237a3e42b4613a1140385cf, type: 3}
   autoReset: 1
-  tickOn: 0
+  tickOn: 3
   sourceInfos:
   - isFoldout: 1
     breakPoints: 
@@ -1023,7 +1023,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scripts:
-  - {fileID: 4900000, guid: 5dc54aeac7ddf1a46b45125d791713e5, type: 3}
+  - {fileID: 4900000, guid: 961023b56dad74e419378caf64255d0d, type: 3}
   autoReset: 1
   tickOn: 2
   sourceInfos:
@@ -1063,18 +1063,22 @@ MonoBehaviour:
     targetMovingKinematic: {fileID: 0}
     collider: {fileID: 0}
     destiniation: {x: 0, y: 0}
+    atDestination: 0
   leftFoot:
     solver: {fileID: 5401979173073545154}
     effectorTransform: {fileID: 0}
     targetMovingKinematic: {fileID: 0}
     collider: {fileID: 0}
     destiniation: {x: 0, y: 0}
+    atDestination: 0
   currentFoot:
     solver: {fileID: 0}
     effectorTransform: {fileID: 0}
     targetMovingKinematic: {fileID: 0}
     collider: {fileID: 0}
     destiniation: {x: 0, y: 0}
+    atDestination: 0
+  targetInStepRange: 0
 --- !u!114 &5401979172304723080
 MonoBehaviour:
   m_ObjectHideFlags: 0

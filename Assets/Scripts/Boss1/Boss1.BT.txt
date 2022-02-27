@@ -1,42 +1,31 @@
 tree("Root")
-    fallback
-        tree("CheckDead")
-        tree("BeAlive")
-
-tree("CheckDead")
     sequence
-        IsDead
-        tree("Die")
+        not IsDead
+        tree("Sense")
+        tree("Decide")
+        tree("Act")
 
-tree("BeAlive")
-    fallback
-        tree("TargetVisible")
-        tree("Roam")
-        
-tree("TargetVisible")
+            
+tree("Sense")
     sequence
-        SeesTarget
-        mute
-            fallback
-                tree("StepOnTarget")
-                tree("StepTowardsTarget")
-        
-tree("StepOnTarget")
-    sequence
-        TargetInStepRange
-        SelectFootClosestToTarget
-        SetFootDestinationOnTarget
-        MoveFootToDestination
-        Wait(0.2)
-
-tree("StepTowardsTarget")
-    sequence
-        SetFootDestinationTowardsTarget
-        MoveFootToDestination
-        SwapCurrentFoot
-
-tree("Roam")
-    Succeed()
+        TickEye
+        CheckTargetInStepRange
     
-tree("Die")
-    Succeed()
+tree("Decide")
+    fallback
+        sequence
+            SeesTarget
+            not IsMovingFoot
+            targetInStepRange
+            SelectFootClosestToTarget
+            SetFootDestinationOnTarget
+        sequence
+            SeesTarget
+            not IsMovingFoot
+            SetFootDestinationTowardsTarget
+        Succeed
+
+tree("Act")
+    sequence
+        not CurrentFootAtDestination
+        MoveFootTowardsDestination

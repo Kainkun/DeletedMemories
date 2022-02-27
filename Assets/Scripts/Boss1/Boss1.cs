@@ -5,6 +5,7 @@ using Cinemachine;
 using Panda;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.InputSystem.Interactions;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.U2D.IK;
 
@@ -21,26 +22,41 @@ public class Boss1 : Entity
     public FootData leftFoot;
     [HideInInspector]
     public FootData currentFoot;
-
     private Eye eye;
+    private PandaBehaviour eyeBT;
 
     [Task]
-    private bool SeesTarget()
+    private void TickEye()
     {
-        if(eye)
-            return eye.seesTarget;
-        return false;
+        eyeBT.Tick();
+        ThisTask.Succeed();
     }
+    
+    [Task] private bool IsDead => base.isDead;
+    [Task] private bool SeesTarget => eye.seesTarget;
+    
+    [Task] public bool targetInStepRange;
+
+
 
     [Serializable]
     public class FootData
     {
-        public void Setup()
+        public void Setup(float torsoHeightOffset)
         {
             effectorTransform = solver.GetChain(0).effector;
             targetMovingKinematic = solver.GetChain(0).target.GetComponent<MovingKinematic>();
             collider = targetMovingKinematic.GetComponent<BoxCollider2D>();
             size = collider.size;
+            
+            collider.enabled = false;
+            RaycastHit2D hit = Physics2D.BoxCast(targetMovingKinematic.transform.position, FootData.size, 0, Vector2.down, torsoHeightOffset + FootData.size.y, GameData.defaultGroundMask);
+            collider.enabled = true;
+            if (hit)
+                targetMovingKinematic.transform.position += Vector3.down * hit.distance;
+
+            destiniation = targetMovingKinematic.transform.position;
+            atDestination = true;
         }
 
         public static Vector2 size;
@@ -53,42 +69,22 @@ public class Boss1 : Entity
         public BoxCollider2D collider;
         [HideInInspector]
         public Vector2 destiniation;
+        [HideInInspector]
+        public bool atDestination;
     }
 
     protected override void Awake()
     {
         base.Awake();
-        Setup();
-        
-        _target = GameObject.FindObjectOfType<PlatformerController>().transform;
         eye = GetComponentInChildren<Eye>();
-
-        leftFoot.collider.enabled = false;
-        rightFoot.collider.enabled = false;
-        RaycastHit2D hitLeft = Physics2D.BoxCast(leftFoot.targetMovingKinematic.transform.position, FootData.size, 0, Vector2.down, torsoHeightOffset + FootData.size.y, GameData.defaultGroundMask);
-        RaycastHit2D hitRight = Physics2D.BoxCast(rightFoot.targetMovingKinematic.transform.position, FootData.size, 0, Vector2.down, torsoHeightOffset + FootData.size.y, GameData.defaultGroundMask);
-        leftFoot.collider.enabled = true;
-        rightFoot.collider.enabled = true;
-        if (hitLeft)
-            leftFoot.targetMovingKinematic.transform.position += Vector3.down * hitLeft.distance;
-        if (hitRight)
-            rightFoot.targetMovingKinematic.transform.position += Vector3.down * hitRight.distance;
+        eyeBT = eye.GetComponent<PandaBehaviour>();
+        _target = GameObject.FindObjectOfType<PlatformerController>().transform;
+        
+        rightFoot.Setup(torsoHeightOffset);
+        leftFoot.Setup(torsoHeightOffset);
+        currentFoot = leftFoot;
         body.transform.position = GetTorsoCenter();
     }
-
-
-    void Setup()
-    {
-        rightFoot.Setup();
-        leftFoot.Setup();
-        
-        currentFoot = leftFoot;
-        
-        // footHitboxSize = footSize;
-        // footHitboxSize.x += footHitboxThickness * 2;
-        // footHitboxSize.y += footHitboxThickness;
-    }
-
 
     protected override void ChildDeath(Entity child)
     {
@@ -97,12 +93,12 @@ public class Boss1 : Entity
             Die();
     }
 
-    [Task] private bool IsDead => base.isDead;
 
     [Task]
-    bool TargetInStepRange()
+    void CheckTargetInStepRange()
     {
-        return Vector2.Distance(body.transform.position, _target.position) <= maxStepDistance;
+        targetInStepRange = Vector2.Distance(body.transform.position, _target.position) <= maxStepDistance;
+        ThisTask.Succeed();
     }
 
     [Task]
@@ -118,6 +114,7 @@ public class Boss1 : Entity
         else //currentFoot == leftFoot
             localFootTargetPos.x = Mathf.Clamp(localFootTargetPos.x, -maxStepDistance, 0);
         currentFoot.destiniation = body.transform.TransformPoint(localFootTargetPos);
+        currentFoot.atDestination = false;
 
         ThisTask.Succeed();
     }
@@ -168,7 +165,8 @@ public class Boss1 : Entity
             Debug.DrawRay(groundCastTop, Vector3.down * groundCastHit.distance, Color.red, 1);
         
         currentFoot.destiniation = groundCastHit.point;
-    
+        currentFoot.atDestination = false;
+
         ThisTask.Succeed();
     }
     
@@ -198,12 +196,13 @@ public class Boss1 : Entity
         return (Vector2.up * torsoHeightOffset) + footAverage;
     }
     
-    struct ArcTween
+    class ArcTween
     {
         public Vector2 startPosition;
         public Vector2 endPosition;
         private float stepHeight;
-        public float startTime;
+        //public float startTime;
+        public float time;
         public float arcLength;
         public float duration;
 
@@ -212,9 +211,7 @@ public class Boss1 : Entity
             this.startPosition = startPosition;
             this.endPosition = endPosition;
             this.stepHeight = stepHeight;
-            startTime = Time.fixedTime;
-            arcLength = 0;
-            duration = 0;
+            time = 0;
             arcLength = EstimateArcLength(10);
             duration = arcLength / speed;
         }
@@ -222,17 +219,15 @@ public class Boss1 : Entity
         public Vector2 GetPosition()
         {
             //this 'Time.fixedTime - startTime' viable for long play time?
-            float timeElapsed = Time.fixedTime - startTime;
-            float t = Mathf.Clamp01(timeElapsed / duration);
+            float t = Mathf.Clamp01(time / duration);
             return Lerp(t);
         }
         
         public Vector2 GetDelta()
         {
             //this 'Time.fixedTime - startTime' viable for long play time?
-            float timeElapsed = Time.fixedTime - startTime;
-            Vector2 newPos = Lerp((timeElapsed + Time.fixedDeltaTime) / duration);
-            Vector2 prevPos = Lerp(timeElapsed / duration);
+            Vector2 newPos = Lerp((time + Time.fixedDeltaTime) / duration);
+            Vector2 prevPos = Lerp(time / duration);
             return newPos - prevPos;
         }
         
@@ -259,19 +254,25 @@ public class Boss1 : Entity
         }
     }
 
+    private ArcTween currentArcTween;
+    [Task] private bool IsMovingFoot => currentArcTween != null;
+    //[Task] private bool IsMovingFoot => !leftFoot.atDestination || !rightFoot.atDestination;
+
+    [Task] private bool CurrentFootAtDestination => currentFoot.atDestination; 
+
     [Task]
-    void MoveFootToDestination()
+    void MoveFootTowardsDestination()
     {
-        if (ThisTask.isStarting)
+        if (currentArcTween == null)
         {
-            ThisTask.data = new ArcTween(currentFoot.targetMovingKinematic.NextFramePosition, currentFoot.destiniation, stepHeight, feetSpeed);
+            currentArcTween = new ArcTween(currentFoot.targetMovingKinematic.NextFramePosition, currentFoot.destiniation, stepHeight, feetSpeed);
         }
 
-        ArcTween arcTween = ThisTask.GetData<ArcTween>();
-
-        if (Time.fixedTime <= (arcTween.startTime + arcTween.duration))
+        //if (Time.fixedTime <= (currentArcTween.startTime + currentArcTween.duration))
+        if(currentArcTween.time <= currentArcTween.duration)
         {
-            Vector2 delta = arcTween.GetDelta();
+            currentArcTween.time += Time.deltaTime;
+            Vector2 delta = currentArcTween.GetDelta();
 
             currentFoot.collider.enabled = false;
             if (Physics2D.OverlapBox(currentFoot.targetMovingKinematic.NextFramePosition + delta, FootData.size, 0, GameData.defaultGroundMask))
@@ -338,10 +339,12 @@ public class Boss1 : Entity
         {
             currentFoot.targetMovingKinematic.MovementUpdate();
             body.MovementUpdate();
-            
             GetComponent<CinemachineImpulseSource>().GenerateImpulse();
-            ThisTask.Succeed();
+            currentArcTween = null;
+            currentFoot.atDestination = true;
+            SwapCurrentFoot();
         }
+        ThisTask.Succeed();
     }
 
     // [Task]

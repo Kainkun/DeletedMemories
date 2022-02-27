@@ -8,8 +8,12 @@ public class PlayerCombat : MonoBehaviour
 {
     private Vector2 direction;
     public float attackRange = 3;
+    public float attackDuration = 0.35f;
+    public float attackCooldown = 0.35f;
     public Collider2D attackCollider;
     public SpriteRenderer attackSpriteRenderer;
+    
+    private Coroutine currentAttackCoroutine;
     
     private void Start()
     {
@@ -38,29 +42,42 @@ public class PlayerCombat : MonoBehaviour
     {
         Debug.DrawRay(transform.position, direction * attackRange, Color.red, 0.2f);
         attackCollider.transform.right = direction;
+        if(currentAttackCoroutine == null)
+            currentAttackCoroutine = StartCoroutine(CR_Attack());
+    }
+
+    IEnumerator CR_Attack()
+    {
         ContactFilter2D contactFilter = new ContactFilter2D();
         contactFilter.SetLayerMask(~GameData.playerMask);
         contactFilter.useTriggers = true;
         attackCollider.enabled = true;
         attackSpriteRenderer.enabled = true;
         List<Collider2D> results = new List<Collider2D>();
-        attackCollider.OverlapCollider(contactFilter, results);
-        foreach (Collider2D result in results)
+        List<Entity> damaged = new List<Entity>();
+        
+        float time = 0;
+        while (time <= attackDuration)
         {
-            Entity entity = result.GetComponent<Entity>();
-            if (entity)
+            attackCollider.OverlapCollider(contactFilter, results);
+            foreach (Collider2D result in results)
             {
-                entity.TakeDamage(1);
+                Entity entity = result.GetComponent<Entity>();
+                if (entity && !damaged.Contains(entity))
+                {
+                    entity.TakeDamage(1);
+                    damaged.Add(entity);
+                }
             }
+            
+            time += Time.deltaTime;
+            yield return null;
         }
-
-        StartCoroutine(CR_Attack());
-    }
-
-    IEnumerator CR_Attack()
-    {
-        yield return new WaitForSeconds(0.1f);
+        
         attackSpriteRenderer.enabled = false;
         attackCollider.enabled = false;
+
+        yield return new WaitForSeconds(attackCooldown);
+        currentAttackCoroutine = null;
     }
 }
