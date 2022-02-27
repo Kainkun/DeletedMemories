@@ -6,11 +6,14 @@ using UnityEngine;
 
 public class PlayerCombat : MonoBehaviour
 {
-    private Vector2 direction;
+    private Vector2 inputDirection;
     public float attackRange = 3;
+    public float attackBuffer = 0.2f;
+    private bool attackWaiting;
     public float attackDuration = 0.35f;
     public float attackCooldown = 0.35f;
     public Collider2D attackCollider;
+    private Vector2 attackDirection;
     public SpriteRenderer attackSpriteRenderer;
     
     private Coroutine currentAttackCoroutine;
@@ -29,21 +32,29 @@ public class PlayerCombat : MonoBehaviour
         // if (value.magnitude > 0.1f)
         //     direction = value;
         if(value.y > 0.1f)
-            direction = Vector2.up;
+            inputDirection = Vector2.up;
         else if (value.y < -0.1f)
-            direction = Vector2.down;
+            inputDirection = Vector2.down;
         else if (value.x > 0.1f)
-            direction = Vector2.right;
+            inputDirection = Vector2.right;
         else if (value.x < -0.1f)
-            direction = Vector2.left;
+            inputDirection = Vector2.left;
     }
 
     void Attack()
     {
-        Debug.DrawRay(transform.position, direction * attackRange, Color.red, 0.2f);
-        attackCollider.transform.right = direction;
-        if(currentAttackCoroutine == null)
+        attackWaiting = true;
+        attackDirection = inputDirection;
+    }
+
+    private void Update()
+    {
+        if (attackWaiting && currentAttackCoroutine == null)
+        {
+            attackWaiting = false;
+            attackCollider.transform.right = attackDirection;
             currentAttackCoroutine = StartCoroutine(CR_Attack());
+        }
     }
 
     IEnumerator CR_Attack()
@@ -62,6 +73,7 @@ public class PlayerCombat : MonoBehaviour
             attackCollider.OverlapCollider(contactFilter, results);
             foreach (Collider2D result in results)
             {
+                print(result.name);
                 Entity entity = result.GetComponent<Entity>();
                 if (entity && !damaged.Contains(entity))
                 {

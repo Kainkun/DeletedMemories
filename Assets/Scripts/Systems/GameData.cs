@@ -20,7 +20,7 @@ public class GameData
         platformMask = LayerMask.GetMask("Platform");
         traversableMask =  defaultMask | platformMask;
         opaqueMask = playerMask | LayerMask.GetMask("Default");
-        airWormAvoidance = defaultMask | LayerMask.GetMask("PlayerIgnore");
+        airWormAvoidance = defaultMask | LayerMask.GetMask("PlayerCollisionIgnore");
         
     }
 }

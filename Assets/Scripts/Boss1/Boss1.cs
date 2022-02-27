@@ -86,14 +86,6 @@ public class Boss1 : Entity
         body.transform.position = GetTorsoCenter();
     }
 
-    protected override void ChildDeath(Entity child)
-    {
-        base.ChildDeath(child);
-        if(childrenEntities.Count <= 0)
-            Die();
-    }
-
-
     [Task]
     void CheckTargetInStepRange()
     {

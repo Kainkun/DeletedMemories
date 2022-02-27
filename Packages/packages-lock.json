@@ -9,7 +9,7 @@
     },
     "com.unity.2d.animation": {
       "version": "5.0.10",
-      "depth": 0,
+      "depth": 1,
       "source": "registry",
       "dependencies": {
         "com.unity.2d.common": "4.0.4",

@@ -11,8 +11,18 @@ public class Entity : MonoBehaviour
     public int currentHealth;
     public Action<Entity> onDeath;
     public List<Entity> childrenEntities;
+    public bool dieIfChildrenKilled;
     public bool destroyOnDeath;
     public bool isDead;
+
+    [EasyButtons.Button]
+    public void GetEntityChildren()
+    {
+        childrenEntities.Clear();
+        foreach (Entity entity in GetComponentsInChildren<Entity>())
+            if(entity != this)
+                childrenEntities.Add(entity);
+    }
 
     protected virtual void Awake()
     {
@@ -35,8 +45,11 @@ public class Entity : MonoBehaviour
     protected virtual void ChildDeath(Entity child)
     {
         childrenEntities.Remove(child);
+        
+        if(dieIfChildrenKilled && childrenEntities.Count <= 0)
+            Die();
     }
-
+    
     public virtual void Die()
     {
         if(isDead)

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem.Interactions;
 using UnityEngine.Networking;
 
-public class AirWorm : MonoBehaviour
+public class AirWorm : Entity
 {
     public Transform target;
     public Transform pivot;

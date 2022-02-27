@@ -407,11 +407,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6d7b455978c741409a5292e37b313be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 20
+  maxHealth: 2
   ignoreDamage: 0
   currentHealth: 0
   childrenEntities: []
-  destroyOnDeath: 1
+  dieIfChildrenKilled: 0
+  destroyOnDeath: 0
   isDead: 0
   fov: 45
   saccadeCooldown: 2
@@ -695,6 +696,7 @@ MonoBehaviour:
   ignoreDamage: 0
   currentHealth: 0
   childrenEntities: []
+  dieIfChildrenKilled: 0
   destroyOnDeath: 1
   isDead: 0
 --- !u!1 &169363832
@@ -1009,11 +1011,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6d7b455978c741409a5292e37b313be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 20
+  maxHealth: 2
   ignoreDamage: 0
   currentHealth: 0
   childrenEntities: []
-  destroyOnDeath: 1
+  dieIfChildrenKilled: 0
+  destroyOnDeath: 0
   isDead: 0
   fov: 45
   saccadeCooldown: 2
@@ -2348,6 +2351,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 644a51174d839994380a9f9a0be99f69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHealth: 3
+  ignoreDamage: 0
+  currentHealth: 0
+  childrenEntities:
+  - {fileID: 407492986}
+  dieIfChildrenKilled: 1
+  destroyOnDeath: 1
+  isDead: 0
   target: {fileID: 1344685296}
   pivot: {fileID: 169363833}
   passiveSpeed: 5
@@ -2642,6 +2653,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 644a51174d839994380a9f9a0be99f69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHealth: 3
+  ignoreDamage: 0
+  currentHealth: 0
+  childrenEntities:
+  - {fileID: 89730353}
+  dieIfChildrenKilled: 1
+  destroyOnDeath: 1
+  isDead: 0
   target: {fileID: 1344685296}
   pivot: {fileID: 1600025421}
   passiveSpeed: 5
@@ -2834,6 +2853,7 @@ MonoBehaviour:
   ignoreDamage: 0
   currentHealth: 0
   childrenEntities: []
+  dieIfChildrenKilled: 0
   destroyOnDeath: 1
   isDead: 0
 --- !u!1 &1417961608
@@ -3427,6 +3447,7 @@ MonoBehaviour:
   ignoreDamage: 0
   currentHealth: 0
   childrenEntities: []
+  dieIfChildrenKilled: 0
   destroyOnDeath: 1
   isDead: 0
 --- !u!1 &1761255027
@@ -3772,21 +3793,9 @@ PrefabInstance:
       value: -0.75865585
       objectReference: {fileID: 0}
     - target: {fileID: 5401979172304723082, guid: eb5d1d3767cc1494690784f8f659c16a, type: 3}
-      propertyPath: childrenEntities.Array.size
-      value: 4
+      propertyPath: dieIfChildrenKilled
+      value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 5401979172304723082, guid: eb5d1d3767cc1494690784f8f659c16a, type: 3}
-      propertyPath: childrenEntities.Array.data[1]
-      value: 
-      objectReference: {fileID: 160526444}
-    - target: {fileID: 5401979172304723082, guid: eb5d1d3767cc1494690784f8f659c16a, type: 3}
-      propertyPath: childrenEntities.Array.data[2]
-      value: 
-      objectReference: {fileID: 1406160471}
-    - target: {fileID: 5401979172304723082, guid: eb5d1d3767cc1494690784f8f659c16a, type: 3}
-      propertyPath: childrenEntities.Array.data[3]
-      value: 
-      objectReference: {fileID: 1624141069}
     - target: {fileID: 5401979172304723083, guid: eb5d1d3767cc1494690784f8f659c16a, type: 3}
       propertyPath: m_RootOrder
       value: 7
