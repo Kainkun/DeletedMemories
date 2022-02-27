@@ -1050,7 +1050,7 @@ MonoBehaviour:
   currentHealth: 0
   childrenEntities:
   - {fileID: 4075043611963830554}
-  dieIfChildrenKilled: 0
+  dieIfChildrenKilled: 1
   destroyOnDeath: 0
   isDead: 0
   body: {fileID: 5401979171540004652}
