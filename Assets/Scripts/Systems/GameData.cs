@@ -7,17 +7,20 @@ using UnityEngine.InputSystem.Interactions;
 public class GameData
 {
     public static LayerMask playerMask;
-    public static LayerMask defaultGroundMask;
+    public static LayerMask defaultMask;
     public static LayerMask platformMask;
     public static LayerMask traversableMask;
     public static LayerMask opaqueMask;
+    public static LayerMask airWormAvoidance;
     
     public void SetData()
     {
         playerMask = LayerMask.GetMask("Player") | LayerMask.GetMask("PlayerPlatformFall");
-        defaultGroundMask = LayerMask.GetMask("Default");
+        defaultMask = LayerMask.GetMask("Default") | LayerMask.GetMask("TransparentDefault");
         platformMask = LayerMask.GetMask("Platform");
-        traversableMask =  defaultGroundMask | platformMask;
-        opaqueMask = playerMask | defaultGroundMask;
+        traversableMask =  defaultMask | platformMask;
+        opaqueMask = playerMask | LayerMask.GetMask("Default");
+        airWormAvoidance = defaultMask | LayerMask.GetMask("PlayerIgnore");
+        
     }
 }

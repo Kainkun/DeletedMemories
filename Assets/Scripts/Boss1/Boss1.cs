@@ -50,7 +50,7 @@ public class Boss1 : Entity
             size = collider.size;
             
             collider.enabled = false;
-            RaycastHit2D hit = Physics2D.BoxCast(targetMovingKinematic.transform.position, FootData.size, 0, Vector2.down, torsoHeightOffset + FootData.size.y, GameData.defaultGroundMask);
+            RaycastHit2D hit = Physics2D.BoxCast(targetMovingKinematic.transform.position, FootData.size, 0, Vector2.down, torsoHeightOffset + FootData.size.y, GameData.defaultMask);
             collider.enabled = true;
             if (hit)
                 targetMovingKinematic.transform.position += Vector3.down * hit.distance;
@@ -105,7 +105,7 @@ public class Boss1 : Entity
     void SetFootDestinationOnTarget()
     {
         currentFoot.collider.enabled = false;
-        var targetGroundHit = Physics2D.Raycast(_target.position, Vector2.down, Mathf.Infinity, GameData.defaultGroundMask);
+        var targetGroundHit = Physics2D.Raycast(_target.position, Vector2.down, Mathf.Infinity, GameData.defaultMask);
         currentFoot.collider.enabled = true;
 
         var localFootTargetPos = body.transform.InverseTransformPoint(targetGroundHit.point);
@@ -135,7 +135,7 @@ public class Boss1 : Entity
         currentFoot.collider.enabled = false;
         var FootAtStepHeight = currentFoot.targetMovingKinematic.NextFramePosition + new Vector2(0, stepHeight);
         //float dist = stepDistance - Mathf.dis (body.NextFramePosition.x - currentFoot.targetMovingKinematic.NextFramePosition.x);
-        var horizontalHit = Physics2D.BoxCast(FootAtStepHeight, FootData.size, 0, new Vector2(targetDirection, 0), tryStepDistance, GameData.defaultGroundMask);
+        var horizontalHit = Physics2D.BoxCast(FootAtStepHeight, FootData.size, 0, new Vector2(targetDirection, 0), tryStepDistance, GameData.defaultMask);
         
         float finalStepDistance;
         if (horizontalHit)
@@ -149,7 +149,7 @@ public class Boss1 : Entity
             Debug.DrawRay(FootAtStepHeight, new Vector2(targetDirection * finalStepDistance, 0), Color.red, 1);
         
         Vector2 groundCastTop = FootAtStepHeight + new Vector2(targetDirection * finalStepDistance, 0);
-        var groundCastHit = Physics2D.Raycast(groundCastTop, Vector2.down, Mathf.Infinity, GameData.defaultGroundMask);
+        var groundCastHit = Physics2D.Raycast(groundCastTop, Vector2.down, Mathf.Infinity, GameData.defaultMask);
         currentFoot.collider.enabled = true;
         
         if(groundCastHit.transform == null)
@@ -275,14 +275,14 @@ public class Boss1 : Entity
             Vector2 delta = currentArcTween.GetDelta();
 
             currentFoot.collider.enabled = false;
-            if (Physics2D.OverlapBox(currentFoot.targetMovingKinematic.NextFramePosition + delta, FootData.size, 0, GameData.defaultGroundMask))
+            if (Physics2D.OverlapBox(currentFoot.targetMovingKinematic.NextFramePosition + delta, FootData.size, 0, GameData.defaultMask))
             {
                 Vector2 newDelta = delta;
                 newDelta.x = 0;
 
                 if (delta.y < 0)
                 {
-                    RaycastHit2D hit = Physics2D.BoxCast(currentFoot.targetMovingKinematic.NextFramePosition, FootData.size, 0, Vector2.down, delta.magnitude, GameData.defaultGroundMask);
+                    RaycastHit2D hit = Physics2D.BoxCast(currentFoot.targetMovingKinematic.NextFramePosition, FootData.size, 0, Vector2.down, delta.magnitude, GameData.defaultMask);
                     if (hit)
                     {
                         newDelta.y = -hit.distance;
@@ -290,7 +290,7 @@ public class Boss1 : Entity
                 }
                 else
                 {
-                    if (Physics2D.OverlapBox(currentFoot.targetMovingKinematic.NextFramePosition + newDelta, FootData.size, 0, GameData.defaultGroundMask))
+                    if (Physics2D.OverlapBox(currentFoot.targetMovingKinematic.NextFramePosition + newDelta, FootData.size, 0, GameData.defaultMask))
                     {
                         newDelta = Vector2.zero;
                     }

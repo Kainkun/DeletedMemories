@@ -276,7 +276,7 @@ public class PlatformerController : MonoBehaviour
 
         _standingOnPlatform = false;
         
-        RaycastHit2D _DefaultGroundHit = Physics2D.BoxCast((Vector2)_position + (Vector2.down * _halfHeight), _groundCeilingCheckSize, 0, Vector2.down, Mathf.Max(groundCheckThickness, -_velocity.y * Time.fixedDeltaTime), GameData.defaultGroundMask);
+        RaycastHit2D _DefaultGroundHit = Physics2D.BoxCast((Vector2)_position + (Vector2.down * _halfHeight), _groundCeilingCheckSize, 0, Vector2.down, Mathf.Max(groundCheckThickness, -_velocity.y * Time.fixedDeltaTime), GameData.defaultMask);
         RaycastHit2D _PlatformHit = Physics2D.BoxCast((Vector2) _position + (Vector2.down * _halfHeight), _groundCeilingCheckSize, 0, Vector2.down, Mathf.Max(groundCheckThickness, -_velocity.y * Time.fixedDeltaTime), GameData.platformMask);
 
         if(_PlatformHit && _velocity.y <= 0 && !_crouchHeld)
@@ -485,7 +485,7 @@ public class PlatformerController : MonoBehaviour
 
     void UpdateCollision()
     {
-        RaycastHit2D headBump = Physics2D.BoxCast((Vector2) _position + (Vector2.up * _halfHeight), _groundCeilingCheckSize, 0, Vector2.up, 0.1f, GameData.defaultGroundMask);
+        RaycastHit2D headBump = Physics2D.BoxCast((Vector2) _position + (Vector2.up * _halfHeight), _groundCeilingCheckSize, 0, Vector2.up, 0.1f, GameData.defaultMask);
 
         if(headBump)
             _velocity.y = Mathf.Min(_velocity.y, 0);
@@ -510,18 +510,18 @@ public class PlatformerController : MonoBehaviour
         {
             Vector2 rightOrigin = (Vector2) _position + new Vector2(_halfWidth, _halfHeight);
             Vector2 leftOrigin = (Vector2) _position + new Vector2(-_halfWidth, _halfHeight);
-            RaycastHit2D rightHit = Physics2D.Raycast(rightOrigin, Vector2.up, _velocity.y * Time.fixedDeltaTime * 2, GameData.defaultGroundMask);
-            RaycastHit2D leftHit = Physics2D.Raycast(leftOrigin, Vector2.up, _velocity.y * Time.fixedDeltaTime * 2, GameData.defaultGroundMask);
+            RaycastHit2D rightHit = Physics2D.Raycast(rightOrigin, Vector2.up, _velocity.y * Time.fixedDeltaTime * 2, GameData.defaultMask);
+            RaycastHit2D leftHit = Physics2D.Raycast(leftOrigin, Vector2.up, _velocity.y * Time.fixedDeltaTime * 2, GameData.defaultMask);
 
             if (leftHit && !rightHit)
             {
-                RaycastHit2D leftHitDist = Physics2D.Raycast(new Vector2(_position.x, leftHit.point.y + 0.01f), Vector2.left, _halfWidth, GameData.defaultGroundMask);
+                RaycastHit2D leftHitDist = Physics2D.Raycast(new Vector2(_position.x, leftHit.point.y + 0.01f), Vector2.left, _halfWidth, GameData.defaultMask);
                 if (leftHitDist && (_halfWidth - leftHitDist.distance) <= _verticalCornerCorrectionWidth)
                     _position += Vector2.right * ((_halfWidth - leftHitDist.distance) + 0.05f);
             }
             else if (rightHit && !leftHit)
             {
-                RaycastHit2D rightHitDist = Physics2D.Raycast(new Vector2(_position.x, rightHit.point.y + 0.01f), Vector2.right, _halfWidth, GameData.defaultGroundMask);
+                RaycastHit2D rightHitDist = Physics2D.Raycast(new Vector2(_position.x, rightHit.point.y + 0.01f), Vector2.right, _halfWidth, GameData.defaultMask);
                 if (rightHitDist && (_halfWidth - rightHitDist.distance) <= _verticalCornerCorrectionWidth)
                     _position += Vector2.left * ((_halfWidth - rightHitDist.distance) + 0.05f);
             }

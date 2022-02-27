@@ -79,6 +79,7 @@ public class Eye : Entity
     public void CheckSeesTarget()
     {
         Vector2 position = transform.position;
+        directionToTarget = ((Vector2) target.position - position).normalized;
 
         if (Vector2.Distance(target.position, transform.position) <= peripheryRadius)
         {
@@ -86,8 +87,6 @@ public class Eye : Entity
         }
         else
         {
-            directionToTarget = ((Vector2) target.position - position).normalized;
-
             seesTarget = false;
             if (Vector2.Angle(directionLooking, directionToTarget) <= fov / 2)
             {
@@ -105,17 +104,24 @@ public class Eye : Entity
     {
         Vector2 targetPosition = (Vector2)transform.position + (directionToLook * pupilClamp);
         Vector2 currentPosition = pupil.transform.position;
+        
+        Debug.DrawRay(targetPosition, Vector3.up + Vector3.right, Color.magenta);
+        Debug.DrawRay(currentPosition, Vector3.up + Vector3.right, Color.cyan);
 
-        if(Vector2.Distance(currentPosition, targetPosition) <= 0.01f)
+
+        if(Vector2.Distance(currentPosition, targetPosition) <= 0.0001f)
         {
             ThisTask.Succeed();
             return;
         }
         
+
+        
         eyeMoving = true;
         timeSinceSaccade = 0;
         currentPosition = Vector2.MoveTowards(currentPosition, targetPosition, pupilSpeed * Time.deltaTime);
         directionLooking = (currentPosition - (Vector2)transform.position).normalized;
+
         if(Vector2.Distance(currentPosition, targetPosition) <= 0.01f)
         {
             currentPosition = targetPosition;
