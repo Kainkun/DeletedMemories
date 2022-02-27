@@ -1296,7 +1296,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.38, y: 20.779999, z: -10}
+  m_LocalPosition: {x: 57.1, y: 19.7, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -3487,7 +3487,7 @@ MonoBehaviour:
   m_Priority: 10
   m_StandbyUpdate: 2
   m_LookAt: {fileID: 0}
-  m_Follow: {fileID: 2021167708}
+  m_Follow: {fileID: 0}
   m_Lens:
     FieldOfView: 60
     OrthographicSize: 15
@@ -3511,7 +3511,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1761255027}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.38, y: 20.779999, z: -10}
+  m_LocalPosition: {x: 57.1, y: 19.7, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 25726985}
@@ -3685,11 +3685,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &2021167708 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6587944478331042666, guid: e45aa09a3fa112e46a20dcb107c2ae89, type: 3}
-  m_PrefabInstance: {fileID: 6587944478459455798}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2051317385
 GameObject:
   m_ObjectHideFlags: 0
