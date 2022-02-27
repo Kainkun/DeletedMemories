@@ -56,6 +56,7 @@ public class AirWorm : MonoBehaviour
         Vector2 directionToTarget = (target.position - transform.position).normalized;
         Vector2 directionToLook = directionToTarget;
         collider.enabled = false;
+        float furthestHit = -1;
         for (int i = 0; i < collisionRayCount; i++)
         {
             //maybe it it should do left then right or vice versa to prevent left right stutter
@@ -65,13 +66,19 @@ public class AirWorm : MonoBehaviour
             if (!hit)
             {
                 directionToLook = direction;
-                Debug.DrawRay((Vector2)transform.position + (direction * collisionRayRadius), direction * collisionRayDistance, Color.yellow);
                 break;
             }
-
-            directionToLook = -directionToTarget;
-            Debug.DrawRay((Vector2)transform.position + (direction * collisionRayRadius), direction * collisionRayDistance, Color.blue);
+            else
+            {
+                if(hit.distance > furthestHit)
+                {
+                    furthestHit = hit.distance;
+                    directionToLook = direction;
+                    Debug.DrawRay((Vector2)transform.position + (direction * collisionRayRadius), direction * collisionRayDistance, Color.blue);
+                }
+            }
         }
+        Debug.DrawRay((Vector2)transform.position + (directionToLook * collisionRayRadius), directionToLook * collisionRayDistance, Color.yellow);
 
         collider.enabled = true;
 
