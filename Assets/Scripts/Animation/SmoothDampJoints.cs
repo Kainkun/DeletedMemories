@@ -18,6 +18,7 @@ public class SmoothDampJoints : MonoBehaviour
     protected List<Transform> joints = new List<Transform>();
     private float[] _rotationVelocities;
     private Vector2[] _positionVelocities;
+    private Transform jointsContainer;
 
     private void OnValidate()
     {
@@ -31,14 +32,14 @@ public class SmoothDampJoints : MonoBehaviour
 
     protected virtual void Start()
     {
-        Transform container = new GameObject(transform.name + "_Container").transform;
+        jointsContainer = new GameObject(transform.name + "_Container").transform;
         Transform currentJoint = transform;
         joints.Add(currentJoint);
         while (currentJoint.childCount > 0)
         {
             currentJoint = currentJoint.GetChild(0);
             currentJoint.localPosition = new Vector3(-segmentLength, 0, 0);
-            currentJoint.parent = container;
+            currentJoint.parent = jointsContainer;
             joints.Add(currentJoint);
         }
 
@@ -64,5 +65,10 @@ public class SmoothDampJoints : MonoBehaviour
             if (delta.magnitude > segmentLength * maxStretchPercent)
                 joints[i].position = joints[i - 1].position + (delta.normalized * segmentLength * maxStretchPercent);
         }
+    }
+
+    private void OnDestroy()
+    {
+        Destroy(jointsContainer);
     }
 }
