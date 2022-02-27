@@ -69,6 +69,7 @@ public class SmoothDampJoints : MonoBehaviour
 
     private void OnDestroy()
     {
-        Destroy(jointsContainer.gameObject);
+        if(jointsContainer)
+            Destroy(jointsContainer.gameObject);
     }
 }

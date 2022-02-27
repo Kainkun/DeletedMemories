@@ -11,6 +11,7 @@ public class PlayerCombat : MonoBehaviour
     public float attackBuffer = 0.2f;
     private bool attackWaiting;
     public float attackDuration = 0.35f;
+    public float attackSpriteDuration = 0.15f;
     public float attackCooldown = 0.35f;
     public Collider2D attackCollider;
     private Vector2 attackDirection;
@@ -73,7 +74,6 @@ public class PlayerCombat : MonoBehaviour
             attackCollider.OverlapCollider(contactFilter, results);
             foreach (Collider2D result in results)
             {
-                print(result.name);
                 Entity entity = result.GetComponent<Entity>();
                 if (entity && !damaged.Contains(entity))
                 {
@@ -82,11 +82,13 @@ public class PlayerCombat : MonoBehaviour
                 }
             }
             
+            if(time >= attackSpriteDuration)
+                attackSpriteRenderer.enabled = false;
+
             time += Time.deltaTime;
             yield return null;
         }
         
-        attackSpriteRenderer.enabled = false;
         attackCollider.enabled = false;
 
         yield return new WaitForSeconds(attackCooldown);
