@@ -15,7 +15,7 @@ public class PlayerCombat : MonoBehaviour
     public float attackCooldown = 0.35f;
     public Collider2D attackCollider;
     private Vector2 attackDirection;
-    public SpriteRenderer attackSpriteRenderer;
+    public GameObject attackSprite;
     
     private Coroutine currentAttackCoroutine;
     
@@ -25,7 +25,7 @@ public class PlayerCombat : MonoBehaviour
         InputManager.Get().Primary += Attack;
         
         attackCollider.enabled = false;
-        attackSpriteRenderer.enabled = false;
+        attackSprite.SetActive(false);
     }
 
     void HandleMove(Vector2 value)
@@ -64,7 +64,7 @@ public class PlayerCombat : MonoBehaviour
         contactFilter.SetLayerMask(~GameData.playerMask);
         contactFilter.useTriggers = true;
         attackCollider.enabled = true;
-        attackSpriteRenderer.enabled = true;
+        attackSprite.SetActive(true);
         List<Collider2D> results = new List<Collider2D>();
         List<Entity> damaged = new List<Entity>();
         
@@ -83,7 +83,7 @@ public class PlayerCombat : MonoBehaviour
             }
             
             if(time >= attackSpriteDuration)
-                attackSpriteRenderer.enabled = false;
+                attackSprite.SetActive(false);
 
             time += Time.deltaTime;
             yield return null;
